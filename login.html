@@ -16,57 +16,44 @@
 }
 body{background:var(--bg);color:var(--text);font-family:'Space Grotesk',sans-serif;min-height:100vh;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:1.5rem;overflow:hidden}
 body::before{content:'';position:fixed;top:-200px;left:50%;transform:translateX(-50%);width:700px;height:500px;background:radial-gradient(ellipse,rgba(124,58,237,0.15) 0%,transparent 70%);pointer-events:none}
-
 .wrap{width:100%;max-width:400px;position:relative;z-index:1}
-
 .logo{font-family:'Syne',sans-serif;font-size:0.85rem;font-weight:900;letter-spacing:0.15em;text-transform:uppercase;background:linear-gradient(135deg,var(--neon),var(--neon2));-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;text-align:center;margin-bottom:2.5rem;display:block}
-
 .card{background:var(--surface);border:1px solid var(--border2);border-radius:24px;padding:2rem;position:relative;overflow:hidden}
 .card::before{content:'';position:absolute;top:0;left:0;right:0;height:2px;background:linear-gradient(90deg,var(--accent),var(--neon),var(--neon2))}
-
 .tabs{display:flex;gap:0;background:var(--surface2);border-radius:10px;padding:4px;margin-bottom:1.75rem}
 .tab{flex:1;padding:0.6rem;border-radius:8px;font-family:'Space Grotesk',sans-serif;font-size:0.82rem;font-weight:700;cursor:pointer;border:none;background:transparent;color:var(--muted);transition:all 0.2s}
 .tab.active{background:var(--surface3);color:var(--text)}
-
 .field{margin-bottom:1rem}
 label{display:block;font-size:0.72rem;font-weight:700;letter-spacing:0.06em;text-transform:uppercase;color:var(--muted);margin-bottom:0.5rem}
 input{width:100%;background:var(--surface2);border:1px solid var(--border2);border-radius:12px;padding:0.85rem 1rem;font-family:'Space Grotesk',sans-serif;font-size:0.92rem;color:var(--text);outline:none;transition:border-color 0.15s}
 input:focus{border-color:rgba(124,58,237,0.4)}
 input::placeholder{color:var(--muted)}
-
 .btn-submit{width:100%;padding:1rem;border-radius:12px;background:linear-gradient(135deg,var(--accent),#6d28d9);color:white;font-family:'Space Grotesk',sans-serif;font-size:0.95rem;font-weight:700;cursor:pointer;border:none;margin-top:0.5rem;transition:opacity 0.15s;position:relative;overflow:hidden}
 .btn-submit::after{content:'';position:absolute;inset:0;background:linear-gradient(135deg,rgba(255,255,255,0.1),transparent);pointer-events:none}
 .btn-submit:hover{opacity:0.9}
-.btn-submit:active{transform:scale(0.99)}
 .btn-submit:disabled{opacity:0.5;cursor:not-allowed}
-
 .error-msg{background:rgba(244,63,94,0.1);border:1px solid rgba(244,63,94,0.3);border-radius:10px;padding:0.75rem 1rem;font-size:0.8rem;color:var(--red);margin-bottom:1rem;display:none}
 .error-msg.show{display:block}
 .success-msg{background:rgba(16,185,129,0.1);border:1px solid rgba(16,185,129,0.3);border-radius:10px;padding:0.75rem 1rem;font-size:0.8rem;color:var(--green);margin-bottom:1rem;display:none}
 .success-msg.show{display:block}
-
 .divider{display:flex;align-items:center;gap:0.75rem;margin:1.25rem 0;color:var(--muted);font-size:0.75rem}
 .divider::before,.divider::after{content:'';flex:1;height:1px;background:var(--border2)}
-
 .btn-guest{width:100%;padding:0.9rem;border-radius:12px;background:var(--surface2);border:1px solid var(--border2);color:var(--muted2);font-family:'Space Grotesk',sans-serif;font-size:0.88rem;font-weight:600;cursor:pointer;transition:all 0.15s}
 .btn-guest:hover{border-color:var(--border);color:var(--text)}
-
 .back-link{text-align:center;margin-top:1.5rem;font-size:0.78rem;color:var(--muted)}
 .back-link a{color:var(--neon);text-decoration:none;font-weight:600}
-.back-link a:hover{text-decoration:underline}
+.spinner{display:inline-block;width:14px;height:14px;border:2px solid rgba(255,255,255,0.3);border-top-color:white;border-radius:50%;animation:spin 0.7s linear infinite;margin-right:8px;vertical-align:middle}
+@keyframes spin{to{transform:rotate(360deg)}}
 </style>
 </head>
 <body>
-
 <div class="wrap">
   <span class="logo">MindSnap</span>
-
   <div class="card">
     <div class="tabs">
       <button class="tab active" id="tab-login" onclick="switchTab('login')">Connexion</button>
       <button class="tab" id="tab-register" onclick="switchTab('register')">Inscription</button>
     </div>
-
     <div id="error-msg" class="error-msg"></div>
     <div id="success-msg" class="success-msg"></div>
 
@@ -103,33 +90,17 @@ input::placeholder{color:var(--muted)}
     <div class="divider">ou</div>
     <button class="btn-guest" onclick="guestMode()">👀 Continuer sans compte</button>
   </div>
-
-  <div class="back-link">
-    <a href="/">← Retour à l'accueil</a>
-  </div>
+  <div class="back-link"><a href="/">&#8592; Retour à l'accueil</a></div>
 </div>
 
 <script>
-// ── Simple auth with localStorage ──
-// In production, replace with a real backend (Supabase, Firebase, etc.)
-
-function getUsers() {
-  return JSON.parse(localStorage.getItem('ms_users') || '{}');
-}
-function saveUsers(u) {
-  localStorage.setItem('ms_users', JSON.stringify(u));
-}
-function setSession(user) {
-  localStorage.setItem('ms_session', JSON.stringify(user));
-}
-
 function showError(msg) {
-  const el = document.getElementById('error-msg');
+  var el = document.getElementById('error-msg');
   el.textContent = msg; el.classList.add('show');
   document.getElementById('success-msg').classList.remove('show');
 }
 function showSuccess(msg) {
-  const el = document.getElementById('success-msg');
+  var el = document.getElementById('success-msg');
   el.textContent = msg; el.classList.add('show');
   document.getElementById('error-msg').classList.remove('show');
 }
@@ -137,7 +108,16 @@ function clearMsgs() {
   document.getElementById('error-msg').classList.remove('show');
   document.getElementById('success-msg').classList.remove('show');
 }
-
+function setLoading(btnId, loading) {
+  var btn = document.getElementById(btnId);
+  if (loading) {
+    btn.disabled = true;
+    btn.innerHTML = '<span class="spinner"></span>Chargement...';
+  } else {
+    btn.disabled = false;
+    btn.innerHTML = btnId === 'btn-login' ? 'Se connecter' : 'Créer mon compte';
+  }
+}
 function switchTab(tab) {
   clearMsgs();
   document.getElementById('tab-login').classList.toggle('active', tab === 'login');
@@ -146,57 +126,71 @@ function switchTab(tab) {
   document.getElementById('form-register').style.display = tab === 'register' ? 'block' : 'none';
 }
 
-function doLogin() {
+async function doLogin() {
   clearMsgs();
-  const email = document.getElementById('login-email').value.trim().toLowerCase();
-  const pass = document.getElementById('login-pass').value;
+  var email = document.getElementById('login-email').value.trim();
+  var pass = document.getElementById('login-pass').value;
   if (!email || !pass) return showError('Remplis tous les champs.');
-  const users = getUsers();
-  const user = users[email];
-  if (!user) return showError('Aucun compte avec cet email.');
-  if (user.pass !== btoa(pass)) return showError('Mot de passe incorrect.');
-  setSession({email, name: user.name, premium: user.premium || false});
-  window.location.href = '/dashboard.html';
+  setLoading('btn-login', true);
+  try {
+    var res = await fetch('/api/auth', {
+      method: 'POST',
+      headers: {'Content-Type': 'application/json'},
+      body: JSON.stringify({action: 'login', email: email, password: pass})
+    });
+    var data = await res.json();
+    if (data.error) { showError(data.error); setLoading('btn-login', false); return; }
+    localStorage.setItem('ms_session', JSON.stringify(data.user));
+    if (data.user.premium) localStorage.setItem('ip', '1');
+    showSuccess('Connexion réussie ! Redirection...');
+    setTimeout(function() { window.location.href = '/dashboard.html'; }, 700);
+  } catch(e) {
+    showError('Erreur serveur. Réessaie.');
+    setLoading('btn-login', false);
+  }
 }
 
-function doRegister() {
+async function doRegister() {
   clearMsgs();
-  const name = document.getElementById('reg-name').value.trim();
-  const email = document.getElementById('reg-email').value.trim().toLowerCase();
-  const pass = document.getElementById('reg-pass').value;
+  var name = document.getElementById('reg-name').value.trim();
+  var email = document.getElementById('reg-email').value.trim();
+  var pass = document.getElementById('reg-pass').value;
   if (!name || !email || !pass) return showError('Remplis tous les champs.');
   if (pass.length < 6) return showError('Mot de passe trop court (min. 6 caractères).');
-  if (!email.includes('@')) return showError('Email invalide.');
-  const users = getUsers();
-  if (users[email]) return showError('Cet email est déjà utilisé.');
-  users[email] = { name, pass: btoa(pass), premium: false, createdAt: Date.now() };
-  saveUsers(users);
-  setSession({email, name, premium: false});
-  showSuccess('Compte créé ! Redirection...');
-  setTimeout(() => window.location.href = '/dashboard.html', 800);
+  setLoading('btn-register', true);
+  try {
+    var res = await fetch('/api/auth', {
+      method: 'POST',
+      headers: {'Content-Type': 'application/json'},
+      body: JSON.stringify({action: 'register', email: email, password: pass, name: name})
+    });
+    var data = await res.json();
+    if (data.error) { showError(data.error); setLoading('btn-register', false); return; }
+    localStorage.setItem('ms_session', JSON.stringify(data.user));
+    showSuccess('Compte créé ! Redirection...');
+    setTimeout(function() { window.location.href = '/dashboard.html'; }, 700);
+  } catch(e) {
+    showError('Erreur serveur. Réessaie.');
+    setLoading('btn-register', false);
+  }
 }
 
 function guestMode() {
-  setSession({email: 'guest', name: 'Invité', premium: false, guest: true});
+  localStorage.setItem('ms_session', JSON.stringify({email:'guest', name:'Invité', premium:false, guest:true}));
   window.location.href = '/';
 }
 
-// Allow Enter key
 document.addEventListener('keydown', function(e) {
   if (e.key === 'Enter') {
-    const loginActive = document.getElementById('form-login').style.display !== 'none';
-    if (loginActive) doLogin(); else doRegister();
+    var loginVisible = document.getElementById('form-login').style.display !== 'none';
+    if (loginVisible) doLogin(); else doRegister();
   }
 });
 
 // Redirect if already logged in
-const sess = localStorage.getItem('ms_session');
-if (sess) {
-  try {
-    const s = JSON.parse(sess);
-    if (s.email && s.email !== 'guest') window.location.href = '/dashboard.html';
-  } catch(e) {}
-}
+var sess = null;
+try { sess = JSON.parse(localStorage.getItem('ms_session')); } catch(e) {}
+if (sess && sess.id) window.location.href = '/dashboard.html';
 </script>
 </body>
 </html>
