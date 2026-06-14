@@ -17,24 +17,18 @@
 }
 body{background:var(--bg);color:var(--text);font-family:'Space Grotesk',sans-serif;min-height:100vh;padding:0 1rem 5rem;overflow-x:hidden}
 body::before{content:'';position:fixed;top:-200px;left:50%;transform:translateX(-50%);width:700px;height:500px;background:radial-gradient(ellipse,rgba(124,58,237,0.1) 0%,transparent 70%);pointer-events:none;z-index:0}
-
 .page{max-width:480px;margin:0 auto;position:relative;z-index:1}
-
-/* TOP BAR */
 .top-bar{display:flex;align-items:center;justify-content:space-between;padding:1.25rem 0 1.5rem}
 .logo{font-family:'Syne',sans-serif;font-size:0.8rem;font-weight:900;letter-spacing:0.15em;text-transform:uppercase;background:linear-gradient(135deg,var(--neon),var(--neon2));-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;text-decoration:none}
 .top-actions{display:flex;gap:0.5rem;align-items:center}
-.btn-sm{background:var(--surface2);border:1px solid var(--border2);border-radius:999px;padding:5px 14px;font-family:'Space Grotesk',sans-serif;font-size:0.72rem;font-weight:700;color:var(--muted2);cursor:pointer;transition:all 0.15s}
+.btn-sm{background:var(--surface2);border:1px solid var(--border2);border-radius:999px;padding:5px 14px;font-family:'Space Grotesk',sans-serif;font-size:0.72rem;font-weight:700;color:var(--muted2);cursor:pointer;transition:all 0.15s;text-decoration:none;display:inline-flex;align-items:center}
 .btn-sm:hover{border-color:var(--border);color:var(--text)}
 .btn-sm.logout{color:var(--red);border-color:rgba(244,63,94,0.2)}
 .btn-sm.logout:hover{background:rgba(244,63,94,0.08)}
-
-/* HERO */
 .hero{text-align:center;padding:0.5rem 0 2rem}
 .avatar-wrap{position:relative;width:90px;height:90px;margin:0 auto 1rem}
-.avatar{width:90px;height:90px;border-radius:50%;background:linear-gradient(135deg,var(--accent),var(--neon));display:flex;align-items:center;justify-content:center;font-size:2rem;font-family:'Syne',sans-serif;font-weight:900;color:white;position:relative;z-index:1}
-.avatar-ring{position:absolute;inset:-3px;border-radius:50%;background:linear-gradient(135deg,var(--accent),var(--neon),var(--neon2));z-index:0;border-radius:50%}
-.avatar-inner{position:relative;z-index:1;width:90px;height:90px;border-radius:50%;background:var(--surface);display:flex;align-items:center;justify-content:center;font-size:2rem}
+.avatar-ring{position:absolute;inset:-3px;border-radius:50%;background:linear-gradient(135deg,var(--accent),var(--neon),var(--neon2));z-index:0}
+.avatar-inner{position:relative;z-index:1;width:90px;height:90px;border-radius:50%;background:var(--surface);display:flex;align-items:center;justify-content:center;font-size:2rem;font-family:'Syne',sans-serif;font-weight:900;color:white}
 .premium-crown{position:absolute;bottom:-4px;right:-4px;background:linear-gradient(135deg,#f59e0b,#f97316);border-radius:50%;width:26px;height:26px;display:flex;align-items:center;justify-content:center;font-size:0.85rem;z-index:2;border:2px solid var(--bg)}
 .user-name{font-family:'Syne',sans-serif;font-size:1.6rem;font-weight:900;margin-bottom:0.3rem}
 .user-email{font-size:0.78rem;color:var(--muted);margin-bottom:0.75rem}
@@ -42,22 +36,13 @@ body::before{content:'';position:fixed;top:-200px;left:50%;transform:translateX(
 .badge{display:inline-flex;align-items:center;gap:5px;background:var(--surface2);border:1px solid var(--border2);border-radius:999px;padding:4px 12px;font-size:0.68rem;font-weight:700;color:var(--muted2)}
 .badge.premium{background:var(--premium-bg);border-color:var(--premium-border);color:var(--gold2)}
 .badge.free{background:rgba(6,182,212,0.08);border-color:rgba(6,182,212,0.2);color:var(--neon2)}
-
-/* STATS */
 .stats-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:0.65rem;margin-bottom:1.25rem}
 .stat-card{background:var(--surface);border:1px solid var(--border2);border-radius:16px;padding:1rem 0.75rem;text-align:center}
 .stat-n{font-family:'Syne',sans-serif;font-size:1.6rem;font-weight:900;display:block;line-height:1;margin-bottom:4px}
-.stat-n.purple{color:var(--neon)}
-.stat-n.cyan{color:var(--neon2)}
-.stat-n.gold{color:var(--gold)}
+.stat-n.purple{color:var(--neon)}.stat-n.cyan{color:var(--neon2)}.stat-n.gold{color:var(--gold)}
 .stat-l{font-size:0.6rem;color:var(--muted);font-weight:700;letter-spacing:0.06em;text-transform:uppercase}
-
-/* SECTIONS */
 .section{background:var(--surface);border:1px solid var(--border2);border-radius:20px;padding:1.25rem;margin-bottom:1rem;position:relative;overflow:hidden}
 .section-title{font-size:0.65rem;font-weight:800;letter-spacing:0.1em;text-transform:uppercase;color:var(--muted);margin-bottom:1rem;display:flex;align-items:center;gap:7px}
-.section-title-icon{font-size:0.9rem}
-
-/* HISTORY */
 .history-item{display:flex;align-items:center;gap:0.9rem;padding:0.75rem 0;border-bottom:1px solid var(--border2)}
 .history-item:last-child{border-bottom:none}
 .hi-emoji{font-size:1.4rem;flex-shrink:0}
@@ -66,21 +51,15 @@ body::before{content:'';position:fixed;top:-200px;left:50%;transform:translateX(
 .hi-meta{font-size:0.68rem;color:var(--muted);margin-top:2px}
 .hi-score{font-family:'Syne',sans-serif;font-size:1rem;font-weight:900;color:var(--neon);flex-shrink:0}
 .history-empty{text-align:center;padding:1.5rem 0;color:var(--muted);font-size:0.85rem}
-
-/* ACHIEVEMENTS */
 .achievements-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:0.65rem}
-.achiev{background:var(--surface2);border:1px solid var(--border2);border-radius:14px;padding:0.9rem 0.5rem;text-align:center;position:relative;overflow:hidden}
+.achiev{background:var(--surface2);border:1px solid var(--border2);border-radius:14px;padding:0.9rem 0.5rem;text-align:center}
 .achiev.unlocked{border-color:rgba(192,132,252,0.3);background:rgba(192,132,252,0.05)}
-.achiev.locked{opacity:0.45;filter:grayscale(1)}
+.achiev.locked{opacity:0.4;filter:grayscale(1)}
 .achiev-icon{font-size:1.6rem;display:block;margin-bottom:0.4rem}
 .achiev-name{font-size:0.65rem;font-weight:700;color:var(--text);display:block}
 .achiev-desc{font-size:0.58rem;color:var(--muted);margin-top:2px;display:block;line-height:1.4}
-
-/* PREMIUM SECTION */
 .premium-section{background:var(--surface);border:1px solid var(--premium-border);border-radius:20px;padding:1.25rem;margin-bottom:1rem;position:relative;overflow:hidden}
 .premium-section::before{content:'';position:absolute;top:0;left:0;right:0;height:2px;background:linear-gradient(135deg,#f59e0b,#fbbf24,#f97316)}
-
-/* SETTINGS */
 .setting-row{display:flex;align-items:center;justify-content:space-between;padding:0.75rem 0;border-bottom:1px solid var(--border2)}
 .setting-row:last-child{border-bottom:none}
 .setting-label{font-size:0.85rem;font-weight:600}
@@ -89,207 +68,185 @@ body::before{content:'';position:fixed;top:-200px;left:50%;transform:translateX(
 .toggle.on{background:var(--accent)}
 .toggle::after{content:'';position:absolute;top:3px;left:3px;width:18px;height:18px;border-radius:50%;background:white;transition:transform 0.2s}
 .toggle.on::after{transform:translateX(20px)}
-
-/* BUTTONS */
 .btn-full{width:100%;padding:0.95rem;border-radius:14px;font-family:'Space Grotesk',sans-serif;font-size:0.9rem;font-weight:700;cursor:pointer;border:none;margin-bottom:0.65rem;transition:all 0.15s}
 .btn-full:active{transform:scale(0.99)}
 .btn-grad{background:linear-gradient(135deg,var(--accent),#6d28d9);color:white}
 .btn-gold{background:linear-gradient(135deg,#f59e0b,#f97316);color:#0a0a0a;font-weight:800;box-shadow:0 0 20px rgba(245,158,11,0.2)}
 .btn-ghost{background:var(--surface2);color:var(--text);border:1px solid var(--border2)}
 .btn-danger{background:rgba(244,63,94,0.1);color:var(--red);border:1px solid rgba(244,63,94,0.2)}
-
-/* TOAST */
-.toast{position:fixed;bottom:1.5rem;left:50%;transform:translateX(-50%) translateY(80px);background:var(--text);color:var(--bg);padding:0.75rem 1.5rem;border-radius:999px;font-size:0.82rem;font-weight:700;transition:transform 0.3s ease;pointer-events:none;white-space:nowrap;z-index:999}
-.toast.show{transform:translateX(-50%) translateY(0)}
-
-/* NAV TABS */
 .nav-tabs{display:flex;background:var(--surface2);border-radius:14px;padding:4px;margin-bottom:1.5rem;gap:4px}
 .nav-tab{flex:1;padding:0.65rem;border-radius:10px;font-family:'Space Grotesk',sans-serif;font-size:0.75rem;font-weight:700;cursor:pointer;border:none;background:transparent;color:var(--muted);transition:all 0.2s;text-align:center}
 .nav-tab.active{background:var(--surface3);color:var(--text)}
-
 .tab-content{display:none}
 .tab-content.active{display:block}
-
+.toast{position:fixed;bottom:1.5rem;left:50%;transform:translateX(-50%) translateY(80px);background:var(--text);color:var(--bg);padding:0.75rem 1.5rem;border-radius:999px;font-size:0.82rem;font-weight:700;transition:transform 0.3s ease;pointer-events:none;white-space:nowrap;z-index:999}
+.toast.show{transform:translateX(-50%) translateY(0)}
 @keyframes goldGlow{0%,100%{box-shadow:0 0 15px rgba(245,158,11,0.1)}50%{box-shadow:0 0 30px rgba(245,158,11,0.25)}}
 .pglow{animation:goldGlow 3s ease-in-out infinite}
+.loading-screen{display:flex;flex-direction:column;align-items:center;justify-content:center;min-height:60vh;gap:1rem;color:var(--muted)}
+.dots{display:flex;gap:5px}
+.dots span{width:7px;height:7px;border-radius:50%;background:var(--accent);animation:pulse 1.2s infinite}
+.dots span:nth-child(2){animation-delay:.2s;background:var(--neon)}
+.dots span:nth-child(3){animation-delay:.4s;background:var(--neon2)}
+@keyframes pulse{0%,80%,100%{transform:scale(0.6);opacity:0.35}40%{transform:scale(1);opacity:1}}
 </style>
 </head>
 <body>
-
 <div class="page">
   <div class="top-bar">
     <a href="/" class="logo">MindSnap</a>
     <div class="top-actions">
-      <button class="btn-sm" onclick="window.location.href='/'">🎮 Jouer</button>
+      <a href="/" class="btn-sm">🎮 Jouer</a>
       <button class="btn-sm logout" onclick="doLogout()">Déconnexion</button>
     </div>
   </div>
 
-  <!-- HERO -->
-  <div class="hero">
-    <div class="avatar-wrap">
-      <div class="avatar-ring"></div>
-      <div class="avatar-inner" id="avatar-emoji">🔥</div>
-      <div class="premium-crown" id="crown-badge" style="display:none">👑</div>
-    </div>
-    <div class="user-name" id="user-name">Chargement...</div>
-    <div class="user-email" id="user-email"></div>
-    <div class="user-badges">
-      <span class="badge free" id="plan-badge">✦ Gratuit</span>
-      <span class="badge" id="member-badge">📅 Membre</span>
-    </div>
+  <!-- LOADING -->
+  <div class="loading-screen" id="loading-screen">
+    <div class="dots"><span></span><span></span><span></span></div>
+    <span style="font-size:0.85rem">Chargement du profil...</span>
   </div>
 
-  <!-- STATS -->
-  <div class="stats-grid">
-    <div class="stat-card">
-      <span class="stat-n purple" id="stat-played">0</span>
-      <span class="stat-l">Questions</span>
-    </div>
-    <div class="stat-card">
-      <span class="stat-n cyan" id="stat-sessions">0</span>
-      <span class="stat-l">Sessions</span>
-    </div>
-    <div class="stat-card">
-      <span class="stat-n gold" id="stat-minority">0</span>
-      <span class="stat-l">Minorité</span>
-    </div>
-  </div>
-
-  <!-- NAV TABS -->
-  <div class="nav-tabs">
-    <button class="nav-tab active" onclick="switchTab('historique')">📊 Historique</button>
-    <button class="nav-tab" onclick="switchTab('trophees')">🏆 Trophées</button>
-    <button class="nav-tab" onclick="switchTab('compte')">⚙️ Compte</button>
-  </div>
-
-  <!-- TAB: HISTORIQUE -->
-  <div class="tab-content active" id="tab-historique">
-    <div class="section">
-      <div class="section-title"><span class="section-title-icon">📊</span> Dernières sessions</div>
-      <div id="history-list"><div class="history-empty">Joue ta première partie pour voir ton historique ici.</div></div>
-    </div>
-
-    <!-- Profil psychologique -->
-    <div class="section">
-      <div class="section-title"><span class="section-title-icon">🧠</span> Profil psychologique dominant</div>
-      <div id="dominant-profile" style="text-align:center;padding:1rem 0">
-        <div style="font-size:2.5rem;margin-bottom:0.5rem" id="dom-emoji">❓</div>
-        <div style="font-family:'Syne',sans-serif;font-size:1.1rem;font-weight:900" id="dom-name">Aucune session</div>
-        <div style="font-size:0.8rem;color:var(--muted2);margin-top:0.4rem" id="dom-desc">Joue pour découvrir ton profil</div>
+  <!-- MAIN CONTENT (hidden until loaded) -->
+  <div id="main-content" style="display:none">
+    <div class="hero">
+      <div class="avatar-wrap">
+        <div class="avatar-ring"></div>
+        <div class="avatar-inner" id="avatar-emoji">?</div>
+        <div class="premium-crown" id="crown-badge" style="display:none">👑</div>
+      </div>
+      <div class="user-name" id="user-name">...</div>
+      <div class="user-email" id="user-email"></div>
+      <div class="user-badges">
+        <span class="badge free" id="plan-badge">✦ Gratuit</span>
+        <span class="badge" id="member-badge">📅 Membre</span>
       </div>
     </div>
-  </div>
 
-  <!-- TAB: TROPHEES -->
-  <div class="tab-content" id="tab-trophees">
-    <div class="section">
-      <div class="section-title"><span class="section-title-icon">🏆</span> Trophées</div>
-      <div class="achievements-grid" id="achievements-grid"></div>
+    <div class="stats-grid">
+      <div class="stat-card"><span class="stat-n purple" id="stat-played">0</span><span class="stat-l">Questions</span></div>
+      <div class="stat-card"><span class="stat-n cyan" id="stat-sessions">0</span><span class="stat-l">Sessions</span></div>
+      <div class="stat-card"><span class="stat-n gold" id="stat-minority">0</span><span class="stat-l">Minorité</span></div>
     </div>
-  </div>
 
-  <!-- TAB: COMPTE -->
-  <div class="tab-content" id="tab-compte">
+    <div class="nav-tabs">
+      <button class="nav-tab active" onclick="switchTab('historique')">📊 Historique</button>
+      <button class="nav-tab" onclick="switchTab('trophees')">🏆 Trophées</button>
+      <button class="nav-tab" onclick="switchTab('compte')">⚙️ Compte</button>
+    </div>
 
-    <!-- Premium status -->
-    <div id="premium-section-free" class="premium-section pglow">
-      <div style="display:flex;align-items:center;gap:10px;margin-bottom:1rem">
-        <span style="font-size:1.3rem">👑</span>
-        <div>
-          <div style="font-family:'Syne',sans-serif;font-size:1rem;font-weight:800">Passe à Premium</div>
-          <div style="font-size:0.7rem;color:var(--muted)">Débloque le profil complet</div>
-        </div>
+    <!-- HISTORIQUE -->
+    <div class="tab-content active" id="tab-historique">
+      <div class="section">
+        <div class="section-title">📊 Dernières sessions</div>
+        <div id="history-list"><div class="history-empty">Joue ta première partie pour voir ton historique ici.</div></div>
       </div>
-      <button class="btn-full btn-gold" onclick="window.location.href='/?premium=open'">👑 Débloquer Premium — $4.99/mois</button>
-    </div>
-
-    <div id="premium-section-paid" style="display:none" class="premium-section">
-      <div style="display:flex;align-items:center;gap:10px;margin-bottom:0.5rem">
-        <span style="font-size:1.3rem">👑</span>
-        <div>
-          <div style="font-family:'Syne',sans-serif;font-size:1rem;font-weight:800;background:linear-gradient(135deg,#f59e0b,#f97316);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text">Premium actif</div>
-          <div style="font-size:0.7rem;color:var(--muted)">Toutes les fonctionnalités débloquées</div>
+      <div class="section">
+        <div class="section-title">🧠 Profil dominant</div>
+        <div style="text-align:center;padding:1rem 0">
+          <div style="font-size:2.5rem;margin-bottom:0.5rem" id="dom-emoji">❓</div>
+          <div style="font-family:'Syne',sans-serif;font-size:1.1rem;font-weight:900" id="dom-name">Aucune session</div>
+          <div style="font-size:0.8rem;color:var(--muted2);margin-top:0.4rem" id="dom-desc">Joue pour découvrir ton profil</div>
         </div>
       </div>
     </div>
 
-    <!-- Settings -->
-    <div class="section">
-      <div class="section-title"><span class="section-title-icon">⚙️</span> Paramètres</div>
-      <div class="setting-row">
-        <div>
-          <div class="setting-label">Notifications</div>
-          <div class="setting-sub">Nouvelles questions &amp; mises à jour</div>
-        </div>
-        <button class="toggle" id="toggle-notif" onclick="toggleSetting('notif')"></button>
-      </div>
-      <div class="setting-row">
-        <div>
-          <div class="setting-label">Partage anonyme</div>
-          <div class="setting-sub">Tes réponses restent anonymes</div>
-        </div>
-        <button class="toggle on" id="toggle-anon" onclick="toggleSetting('anon')"></button>
+    <!-- TROPHEES -->
+    <div class="tab-content" id="tab-trophees">
+      <div class="section">
+        <div class="section-title">🏆 Trophées</div>
+        <div class="achievements-grid" id="achievements-grid"></div>
       </div>
     </div>
 
-    <!-- Account actions -->
-    <div class="section">
-      <div class="section-title"><span class="section-title-icon">👤</span> Mon compte</div>
-      <div style="margin-bottom:0.75rem">
-        <div style="font-size:0.72rem;font-weight:700;letter-spacing:0.06em;text-transform:uppercase;color:var(--muted);margin-bottom:0.5rem">Pseudo</div>
-        <input type="text" id="edit-name" style="width:100%;background:var(--surface2);border:1px solid var(--border2);border-radius:10px;padding:0.75rem 1rem;font-family:'Space Grotesk',sans-serif;font-size:0.9rem;color:var(--text);outline:none">
+    <!-- COMPTE -->
+    <div class="tab-content" id="tab-compte">
+      <div id="premium-section-free" class="premium-section pglow">
+        <div style="display:flex;align-items:center;gap:10px;margin-bottom:1rem">
+          <span style="font-size:1.3rem">👑</span>
+          <div>
+            <div style="font-family:'Syne',sans-serif;font-size:1rem;font-weight:800">Passe à Premium</div>
+            <div style="font-size:0.7rem;color:var(--muted)">Débloque le profil complet</div>
+          </div>
+        </div>
+        <button class="btn-full btn-gold" onclick="goPremium()">👑 Débloquer Premium — $4.99/mois</button>
       </div>
-      <button class="btn-full btn-ghost" onclick="saveName()" style="margin-bottom:0.5rem">💾 Sauvegarder</button>
-      <button class="btn-full btn-danger" onclick="confirmDelete()">🗑️ Supprimer mon compte</button>
-    </div>
+      <div id="premium-section-paid" style="display:none" class="premium-section">
+        <div style="display:flex;align-items:center;gap:10px">
+          <span style="font-size:1.3rem">👑</span>
+          <div>
+            <div style="font-family:'Syne',sans-serif;font-size:1rem;font-weight:800;background:linear-gradient(135deg,#f59e0b,#f97316);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text">Premium actif</div>
+            <div style="font-size:0.7rem;color:var(--muted)">Toutes les fonctionnalités débloquées</div>
+          </div>
+        </div>
+      </div>
 
-    <button class="btn-full btn-ghost" onclick="doLogout()">🚪 Se déconnecter</button>
+      <div class="section">
+        <div class="section-title">⚙️ Paramètres</div>
+        <div class="setting-row">
+          <div><div class="setting-label">Notifications</div><div class="setting-sub">Nouvelles questions et mises à jour</div></div>
+          <button class="toggle" id="toggle-notif" onclick="toggleSetting('notif')"></button>
+        </div>
+        <div class="setting-row">
+          <div><div class="setting-label">Partage anonyme</div><div class="setting-sub">Tes réponses restent anonymes</div></div>
+          <button class="toggle on" id="toggle-anon" onclick="toggleSetting('anon')"></button>
+        </div>
+      </div>
+
+      <div class="section">
+        <div class="section-title">👤 Mon compte</div>
+        <div style="margin-bottom:0.75rem">
+          <div style="font-size:0.72rem;font-weight:700;letter-spacing:0.06em;text-transform:uppercase;color:var(--muted);margin-bottom:0.5rem">Pseudo</div>
+          <input type="text" id="edit-name" style="width:100%;background:var(--surface2);border:1px solid var(--border2);border-radius:10px;padding:0.75rem 1rem;font-family:'Space Grotesk',sans-serif;font-size:0.9rem;color:var(--text);outline:none">
+        </div>
+        <button class="btn-full btn-ghost" onclick="saveName()" style="margin-bottom:0.5rem">💾 Sauvegarder</button>
+        <button class="btn-full btn-danger" onclick="confirmDelete()">🗑️ Supprimer mon compte</button>
+      </div>
+
+      <button class="btn-full btn-ghost" onclick="doLogout()">🚪 Se déconnecter</button>
+    </div>
   </div>
 </div>
 
 <div class="toast" id="toast"></div>
 
 <script>
-// ── Load session ──
 var session = null;
 try { session = JSON.parse(localStorage.getItem('ms_session')); } catch(e) {}
-if (!session || !session.email || session.guest) {
-  window.location.href = '/login.html';
-}
+if (!session || !session.id) { window.location.href = '/login.html'; }
 
 var PROFILE_TYPES = {
   rebel:    {emoji:'🔥', name:'Le Rebelle', desc:'Tu choisis souvent contre la majorité.'},
-  pragmatic:{emoji:'🧮', name:'Le Pragmatique', desc:'Tu suis l\'instinct collectif.'},
-  empath:   {emoji:'💚', name:'L\'Empathique', desc:'Tu priorise les autres.'},
+  pragmatic:{emoji:'🧮', name:'Le Pragmatique', desc:"Tu suis l'instinct collectif."},
+  empath:   {emoji:'💚', name:"L'Empathique", desc:'Tu priorise les autres.'},
   judge:    {emoji:'⚖️', name:'Le Juge', desc:'Tu as des principes clairs.'},
   complex:  {emoji:'🌀', name:'Le Complexe', desc:'Tes choix sont nuancés et contextuels.'},
 };
 
 var ACHIEVEMENTS = [
-  {id:'first', icon:'🎯', name:'Premier pas', desc:'1ère session complétée', req: s => s >= 1},
-  {id:'five', icon:'🔥', name:'En feu', desc:'5 sessions jouées', req: s => s >= 5},
-  {id:'ten', icon:'💯', name:'Accro', desc:'10 sessions jouées', req: s => s >= 10},
-  {id:'rebel', icon:'😈', name:'Rebelle', desc:'Profil Rebelle obtenu', req: (s,p) => p === 'rebel'},
-  {id:'empath', icon:'💚', name:'Coeur tendre', desc:'Profil Empathique', req: (s,p) => p === 'empath'},
-  {id:'judge', icon:'⚖️', name:'Le Juge', desc:'Profil Juge obtenu', req: (s,p) => p === 'judge'},
-  {id:'minority', icon:'🦄', name:'Mouton noir', desc:'10 réponses minoritaires', req: (s,p,m) => m >= 10},
-  {id:'premium', icon:'👑', name:'Premium', desc:'Membre Premium', req: (s,p,m,pr) => pr},
-  {id:'questions', icon:'🧠', name:'Curieux', desc:'50 questions répondues', req: (s,p,m,pr,q) => q >= 50},
+  {id:'first', icon:'🎯', name:'Premier pas', desc:'1ère session', req:function(s){return s>=1;}},
+  {id:'five',  icon:'🔥', name:'En feu',      desc:'5 sessions',  req:function(s){return s>=5;}},
+  {id:'ten',   icon:'💯', name:'Accro',       desc:'10 sessions', req:function(s){return s>=10;}},
+  {id:'rebel', icon:'😈', name:'Rebelle',     desc:'Profil Rebelle', req:function(s,p){return p==='rebel';}},
+  {id:'empath',icon:'💚', name:'Coeur tendre',desc:'Profil Empathique', req:function(s,p){return p==='empath';}},
+  {id:'judge', icon:'⚖️', name:'Le Juge',     desc:'Profil Juge',  req:function(s,p){return p==='judge';}},
+  {id:'minority',icon:'🦄',name:'Mouton noir',desc:'10 choix minoritaires', req:function(s,p,m){return m>=10;}},
+  {id:'premium',icon:'👑',name:'Premium',     desc:'Membre Premium', req:function(s,p,m,pr){return pr;}},
+  {id:'questions',icon:'🧠',name:'Curieux',   desc:'50 questions', req:function(s,p,m,pr,q){return q>=50;}},
 ];
 
 function toast(msg) {
   var t = document.getElementById('toast');
   t.textContent = msg; t.classList.add('show');
-  setTimeout(() => t.classList.remove('show'), 3000);
+  setTimeout(function(){t.classList.remove('show');}, 3000);
 }
 
 function switchTab(name) {
-  document.querySelectorAll('.nav-tab').forEach((t,i) => {
-    var names = ['historique','trophees','compte'];
+  var names = ['historique','trophees','compte'];
+  document.querySelectorAll('.nav-tab').forEach(function(t,i){
     t.classList.toggle('active', names[i] === name);
   });
-  document.querySelectorAll('.tab-content').forEach(c => c.classList.remove('active'));
+  document.querySelectorAll('.tab-content').forEach(function(c){c.classList.remove('active');});
   document.getElementById('tab-' + name).classList.add('active');
 }
 
@@ -301,43 +258,70 @@ function toggleSetting(key) {
 
 function doLogout() {
   localStorage.removeItem('ms_session');
+  localStorage.removeItem('ip');
   window.location.href = '/login.html';
 }
 
-function saveName() {
+function goPremium() {
+  window.location.href = '/api/stripe-checkout?plan=monthly&userId=' + session.id;
+}
+
+async function saveName() {
   var newName = document.getElementById('edit-name').value.trim();
   if (!newName) return toast('Entre un pseudo.');
-  session.name = newName;
-  localStorage.setItem('ms_session', JSON.stringify(session));
-  var users = JSON.parse(localStorage.getItem('ms_users') || '{}');
-  if (users[session.email]) { users[session.email].name = newName; localStorage.setItem('ms_users', JSON.stringify(users)); }
-  document.getElementById('user-name').textContent = newName;
-  toast('Pseudo mis à jour ✓');
+  try {
+    await fetch('/api/auth', {
+      method: 'POST',
+      headers: {'Content-Type': 'application/json'},
+      body: JSON.stringify({action: 'updateName', userId: session.id, name: newName})
+    });
+    session.name = newName;
+    localStorage.setItem('ms_session', JSON.stringify(session));
+    document.getElementById('user-name').textContent = newName;
+    document.getElementById('avatar-emoji').textContent = newName[0].toUpperCase();
+    toast('Pseudo mis à jour ✓');
+  } catch(e) { toast('Erreur. Réessaie.'); }
 }
 
-function confirmDelete() {
-  if (confirm('Supprimer ton compte ? Cette action est irréversible.')) {
-    var users = JSON.parse(localStorage.getItem('ms_users') || '{}');
-    delete users[session.email];
-    localStorage.setItem('ms_users', JSON.stringify(users));
+async function confirmDelete() {
+  if (!confirm('Supprimer ton compte ? Cette action est irréversible.')) return;
+  try {
+    await fetch('/api/auth', {
+      method: 'POST',
+      headers: {'Content-Type': 'application/json'},
+      body: JSON.stringify({action: 'deleteAccount', userId: session.id})
+    });
     localStorage.removeItem('ms_session');
+    localStorage.removeItem('ip');
     window.location.href = '/login.html';
-  }
+  } catch(e) { toast('Erreur. Réessaie.'); }
 }
 
-// ── Load data ──
-function loadDashboard() {
-  // User info
+async function loadDashboard() {
+  try {
+    // Refresh user from Supabase
+    var res = await fetch('/api/auth', {
+      method: 'POST',
+      headers: {'Content-Type': 'application/json'},
+      body: JSON.stringify({action: 'getUser', id: session.id})
+    });
+    var data = await res.json();
+    if (data.user) {
+      session = Object.assign(session, data.user);
+      localStorage.setItem('ms_session', JSON.stringify(session));
+      if (data.user.premium) localStorage.setItem('ip', '1');
+    }
+  } catch(e) {}
+
+  var isPremium = session.premium || localStorage.getItem('ip') === '1';
+
+  // Avatar
+  document.getElementById('avatar-emoji').textContent = (session.name||'?')[0].toUpperCase();
   document.getElementById('user-name').textContent = session.name || 'Utilisateur';
-  document.getElementById('user-email').textContent = session.email;
+  document.getElementById('user-email').textContent = session.email || '';
   document.getElementById('edit-name').value = session.name || '';
 
-  // Avatar initial
-  var initials = (session.name || 'U')[0].toUpperCase();
-  document.getElementById('avatar-emoji').textContent = initials;
-
-  // Premium
-  var isPremium = localStorage.getItem('ip') === '1' || session.premium;
+  // Premium UI
   if (isPremium) {
     document.getElementById('crown-badge').style.display = 'flex';
     document.getElementById('plan-badge').textContent = '👑 Premium';
@@ -346,47 +330,39 @@ function loadDashboard() {
     document.getElementById('premium-section-paid').style.display = 'block';
   }
 
-  // Stats from localStorage
-  var totalAnswered = parseInt(localStorage.getItem('totalAnswered') || '0');
+  // Stats from localStorage + Supabase
+  var totalAnswered = session.total_answered || parseInt(localStorage.getItem('totalAnswered') || '0');
+  var totalSessions = session.total_sessions || 0;
   var history = JSON.parse(localStorage.getItem('sessionHistory') || '[]');
-  var totalMinority = history.reduce((s, h) => s + (h.minority || 0), 0);
+  var totalMinority = history.reduce(function(s,h){return s+(h.minority||0);}, 0);
 
   document.getElementById('stat-played').textContent = totalAnswered;
-  document.getElementById('stat-sessions').textContent = history.length;
+  document.getElementById('stat-sessions').textContent = Math.max(totalSessions, history.length);
   document.getElementById('stat-minority').textContent = totalMinority;
 
-  // Member since
-  var users = JSON.parse(localStorage.getItem('ms_users') || '{}');
-  var userData = users[session.email];
-  if (userData && userData.createdAt) {
-    var d = new Date(userData.createdAt);
-    document.getElementById('member-badge').textContent = '📅 ' + d.toLocaleDateString('fr-FR', {month:'short', year:'numeric'});
-  }
+  // Member badge
+  document.getElementById('member-badge').textContent = '📅 ' + new Date().toLocaleDateString('fr-FR', {month:'short', year:'numeric'});
 
   // History
   var histEl = document.getElementById('history-list');
   if (history.length === 0) {
     histEl.innerHTML = '<div class="history-empty">Joue ta première partie pour voir ton historique ici.</div>';
   } else {
-    histEl.innerHTML = history.slice(-8).reverse().map(h => {
-      var date = new Date(h.date || Date.now()).toLocaleDateString('fr-FR', {day:'numeric', month:'short'});
+    histEl.innerHTML = history.slice(-8).reverse().map(function(h){
+      var date = new Date(h.date||Date.now()).toLocaleDateString('fr-FR', {day:'numeric',month:'short'});
       return '<div class="history-item">'
-        + '<span class="hi-emoji">' + (h.emoji || '🎯') + '</span>'
-        + '<div class="hi-info">'
-        + '<div class="hi-title">' + (h.prof || 'Session') + '</div>'
-        + '<div class="hi-meta">' + (h.cat || 'Général') + ' · ' + date + ' · ' + (h.total || 0) + ' questions</div>'
-        + '</div>'
-        + '<span class="hi-score">' + (h.avgPct || 0) + '%</span>'
-        + '</div>';
+        + '<span class="hi-emoji">'+(h.emoji||'🎯')+'</span>'
+        + '<div class="hi-info"><div class="hi-title">'+(h.prof||'Session')+'</div>'
+        + '<div class="hi-meta">'+(h.cat||'Général')+' · '+date+' · '+(h.total||0)+' questions</div></div>'
+        + '<span class="hi-score">'+(h.avgPct||0)+'%</span></div>';
     }).join('');
   }
 
   // Dominant profile
   if (history.length > 0) {
-    var profiles = history.map(h => h.pkey).filter(Boolean);
     var counts = {};
-    profiles.forEach(p => counts[p] = (counts[p] || 0) + 1);
-    var dominant = Object.keys(counts).sort((a,b) => counts[b]-counts[a])[0];
+    history.forEach(function(h){ if(h.pkey) counts[h.pkey]=(counts[h.pkey]||0)+1; });
+    var dominant = Object.keys(counts).sort(function(a,b){return counts[b]-counts[a];})[0];
     var prof = PROFILE_TYPES[dominant];
     if (prof) {
       document.getElementById('dom-emoji').textContent = prof.emoji;
@@ -396,15 +372,18 @@ function loadDashboard() {
   }
 
   // Achievements
-  var grid = document.getElementById('achievements-grid');
-  grid.innerHTML = ACHIEVEMENTS.map(a => {
-    var unlocked = a.req(history.length, history.length > 0 ? history[history.length-1].pkey : '', totalMinority, isPremium, totalAnswered);
-    return '<div class="achiev ' + (unlocked ? 'unlocked' : 'locked') + '">'
-      + '<span class="achiev-icon">' + a.icon + '</span>'
-      + '<span class="achiev-name">' + a.name + '</span>'
-      + '<span class="achiev-desc">' + a.desc + '</span>'
-      + '</div>';
+  var lastProf = history.length > 0 ? history[history.length-1].pkey : '';
+  document.getElementById('achievements-grid').innerHTML = ACHIEVEMENTS.map(function(a){
+    var unlocked = a.req(history.length, lastProf, totalMinority, isPremium, totalAnswered);
+    return '<div class="achiev '+(unlocked?'unlocked':'locked')+'">'
+      +'<span class="achiev-icon">'+a.icon+'</span>'
+      +'<span class="achiev-name">'+a.name+'</span>'
+      +'<span class="achiev-desc">'+a.desc+'</span></div>';
   }).join('');
+
+  // Show content
+  document.getElementById('loading-screen').style.display = 'none';
+  document.getElementById('main-content').style.display = 'block';
 }
 
 loadDashboard();
