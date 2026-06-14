@@ -142,6 +142,7 @@ async function doLogin() {
     if (data.error) { showError(data.error); setLoading('btn-login', false); return; }
     localStorage.setItem('ms_session', JSON.stringify(data.user));
     if (data.user.premium) localStorage.setItem('ip', '1');
+    applyUserTheme(data.user.name);
     showSuccess('Connexion réussie ! Redirection...');
     setTimeout(function() { window.location.href = '/dashboard.html'; }, 700);
   } catch(e) {
@@ -167,6 +168,7 @@ async function doRegister() {
     var data = await res.json();
     if (data.error) { showError(data.error); setLoading('btn-register', false); return; }
     localStorage.setItem('ms_session', JSON.stringify(data.user));
+    applyUserTheme(data.user.name);
     showSuccess('Compte créé ! Redirection...');
     setTimeout(function() { window.location.href = '/dashboard.html'; }, 700);
   } catch(e) {
@@ -186,6 +188,43 @@ document.addEventListener('keydown', function(e) {
     if (loginVisible) doLogin(); else doRegister();
   }
 });
+
+
+function getUserTheme(name) {
+  if (!name || name === 'Invite') return null;
+  var themes = [
+    {accent:'#7c3aed',neon:'#c084fc',neon2:'#06b6d4'},
+    {accent:'#db2777',neon:'#f472b6',neon2:'#fb923c'},
+    {accent:'#0891b2',neon:'#22d3ee',neon2:'#34d399'},
+    {accent:'#dc2626',neon:'#f87171',neon2:'#fbbf24'},
+    {accent:'#059669',neon:'#34d399',neon2:'#60a5fa'},
+    {accent:'#7c3aed',neon:'#a78bfa',neon2:'#f472b6'},
+    {accent:'#b45309',neon:'#fbbf24',neon2:'#34d399'},
+    {accent:'#1d4ed8',neon:'#60a5fa',neon2:'#c084fc'},
+  ];
+  var hash = 0;
+  for (var i=0;i<name.length;i++){hash=((hash<<5)-hash)+name.charCodeAt(i);hash|=0;}
+  return themes[Math.abs(hash)%themes.length];
+}
+function hexToRgb(hex){
+  return parseInt(hex.slice(1,3),16)+','+parseInt(hex.slice(3,5),16)+','+parseInt(hex.slice(5,7),16);
+}
+function applyUserTheme(name) {
+  var theme = getUserTheme(name);
+  if (!theme) return;
+  var r = document.documentElement;
+  r.style.setProperty('--accent',theme.accent);
+  r.style.setProperty('--neon',theme.neon);
+  r.style.setProperty('--neon2',theme.neon2);
+  r.style.setProperty('--border','rgba('+hexToRgb(theme.accent)+',0.15)');
+  var s=document.createElement('style');
+  s.textContent='body::before{background:radial-gradient(ellipse,rgba('+hexToRgb(theme.accent)+',0.12) 0%,transparent 70%)!important}';
+  document.head.appendChild(s);
+}
+
+// Apply theme on load
+var _s=null;try{_s=JSON.parse(localStorage.getItem('ms_session'));}catch(e){}
+if(_s&&_s.name) applyUserTheme(_s.name);
 
 // Redirect if already logged in
 var sess = null;
