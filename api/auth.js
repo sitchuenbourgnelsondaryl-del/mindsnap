@@ -1,10 +1,7 @@
-// api/auth.js
-// Handles: register, login, getUser, saveSession
-
 const SUPABASE_URL = process.env.SUPABASE_URL;
 const SUPABASE_KEY = process.env.SUPABASE_SERVICE_KEY;
 
-async function supabase(method, path, body) {
+async function sb(method, path, body) {
   const res = await fetch(`${SUPABASE_URL}/rest/v1/${path}`, {
     method,
     headers: {
@@ -15,78 +12,71 @@ async function supabase(method, path, body) {
     },
     body: body ? JSON.stringify(body) : undefined,
   });
-  return res.json();
+  const text = await res.text();
+  try { return JSON.parse(text); } catch(e) { return null; }
 }
 
 function hashPass(pass) {
-  // Simple hash - in production use bcrypt
-  let hash = 0;
+  let h = 5381;
   for (let i = 0; i < pass.length; i++) {
-    hash = ((hash << 5) - hash) + pass.charCodeAt(i);
-    hash |= 0;
+    h = ((h << 5) + h) + pass.charCodeAt(i);
+    h = h & h;
   }
-  return 'h_' + Math.abs(hash).toString(36) + '_' + pass.length;
+  return 'ms_' + Math.abs(h).toString(16) + '_' + pass.length;
 }
 
 export default async function handler(req, res) {
   if (req.method !== 'POST') return res.status(405).end();
 
-  const { action, email, password, name } = req.body;
+  const { action, email, password, name, id, userId } = req.body;
 
   // ── REGISTER ──
   if (action === 'register') {
     if (!email || !password || !name) return res.status(400).json({ error: 'Champs manquants.' });
     if (password.length < 6) return res.status(400).json({ error: 'Mot de passe trop court.' });
 
-    // Check if exists
-    const existing = await supabase('GET', `users?email=eq.${encodeURIComponent(email)}&select=id`);
+    const existing = await sb('GET', `users?email=eq.${encodeURIComponent(email.toLowerCase().trim())}&select=id`);
     if (existing && existing.length > 0) return res.status(400).json({ error: 'Email déjà utilisé.' });
 
-    const data = await supabase('POST', 'users', {
+    const hash = hashPass(password);
+    const data = await sb('POST', 'users', {
       email: email.toLowerCase().trim(),
       name: name.trim(),
-      password_hash: hashPass(password),
+      password_hash: hash,
     });
 
     if (!data || data.error) return res.status(500).json({ error: 'Erreur création compte.' });
-
     const user = Array.isArray(data) ? data[0] : data;
-    return res.status(200).json({
-      success: true,
-      user: { id: user.id, email: user.email, name: user.name, premium: user.premium }
-    });
+    return res.status(200).json({ success: true, user: { id: user.id, email: user.email, name: user.name, premium: user.premium || false } });
   }
 
   // ── LOGIN ──
   if (action === 'login') {
     if (!email || !password) return res.status(400).json({ error: 'Champs manquants.' });
 
-    const data = await supabase('GET', `users?email=eq.${encodeURIComponent(email.toLowerCase().trim())}&select=*`);
+    const data = await sb('GET', `users?email=eq.${encodeURIComponent(email.toLowerCase().trim())}&select=*`);
     if (!data || data.length === 0) return res.status(400).json({ error: 'Aucun compte avec cet email.' });
 
     const user = data[0];
-    if (user.password_hash !== hashPass(password)) return res.status(400).json({ error: 'Mot de passe incorrect.' });
+    const hash = hashPass(password);
 
-    return res.status(200).json({
-      success: true,
-      user: { id: user.id, email: user.email, name: user.name, premium: user.premium, plan: user.premium_plan }
-    });
+    if (user.password_hash !== hash) return res.status(400).json({ error: 'Mot de passe incorrect.' });
+
+    return res.status(200).json({ success: true, user: { id: user.id, email: user.email, name: user.name, premium: user.premium || false, plan: user.premium_plan } });
   }
 
   // ── GET USER ──
   if (action === 'getUser') {
-    const data = await supabase('GET', `users?id=eq.${req.body.id}&select=*`);
+    const data = await sb('GET', `users?id=eq.${id}&select=*`);
     if (!data || data.length === 0) return res.status(404).json({ error: 'Utilisateur introuvable.' });
     const user = data[0];
-    return res.status(200).json({
-      user: { id: user.id, email: user.email, name: user.name, premium: user.premium, plan: user.premium_plan, total_answered: user.total_answered, total_sessions: user.total_sessions }
-    });
+    return res.status(200).json({ user: { id: user.id, email: user.email, name: user.name, premium: user.premium || false, plan: user.premium_plan, total_answered: user.total_answered, total_sessions: user.total_sessions } });
   }
 
-  // ── SAVE GAME SESSION ──
+  // ── SAVE SESSION ──
   if (action === 'saveSession') {
-    const { userId, session } = req.body;
-    await supabase('POST', 'game_sessions', {
+    const { session } = req.body;
+    await sb('POST', 'game_sessions', {
       user_id: userId,
       profile_key: session.pkey,
       profile_name: session.prof,
@@ -96,8 +86,7 @@ export default async function handler(req, res) {
       minority_count: session.minority,
       avg_pct: session.avgPct,
     });
-    // Update user stats
-    await supabase('PATCH', `users?id=eq.${userId}`, {
+    await sb('PATCH', `users?id=eq.${userId}`, {
       total_answered: session.totalAnswered,
       total_sessions: session.totalSessions,
     });
@@ -106,15 +95,20 @@ export default async function handler(req, res) {
 
   // ── UPDATE NAME ──
   if (action === 'updateName') {
-    const { userId, name } = req.body;
-    await supabase('PATCH', `users?id=eq.${userId}`, { name });
+    await sb('PATCH', `users?id=eq.${userId}`, { name });
     return res.status(200).json({ success: true });
   }
 
   // ── DELETE ACCOUNT ──
   if (action === 'deleteAccount') {
-    const { userId } = req.body;
-    await supabase('DELETE', `users?id=eq.${userId}`);
+    await sb('DELETE', `users?id=eq.${userId}`);
+    return res.status(200).json({ success: true });
+  }
+
+  // ── ACTIVATE PREMIUM ──
+  if (action === 'activatePremium') {
+    const { plan } = req.body;
+    await sb('PATCH', `users?id=eq.${userId}`, { premium: true, premium_plan: plan });
     return res.status(200).json({ success: true });
   }
 
