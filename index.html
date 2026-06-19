@@ -84,12 +84,28 @@ body::before{content:'';position:fixed;top:-200px;left:50%;transform:translateX(
 .choice-btn:active{transform:scale(0.98)}
 .choice-btn.sel-a{border-color:var(--neon);background:rgba(192,132,252,0.08)}
 .choice-btn.sel-b{border-color:var(--neon2);background:rgba(6,182,212,0.07)}
+.choice-btn.sel-c{border-color:var(--green);background:rgba(16,185,129,0.07)}
+.choice-btn.sel-d{border-color:#f59e0b;background:rgba(245,158,11,0.07)}
 .choice-btn.dimmed{opacity:0.3}
 .choice-pill{min-width:32px;height:32px;border-radius:8px;background:var(--surface3);display:flex;align-items:center;justify-content:center;font-size:0.72rem;font-weight:800;flex-shrink:0;transition:all 0.15s;color:var(--muted2)}
 .choice-btn.sel-a .choice-pill{background:var(--accent);color:white;box-shadow:0 0 10px rgba(124,58,237,0.4)}
 .choice-btn.sel-b .choice-pill{background:var(--neon2);color:#060608}
+.choice-btn.sel-c .choice-pill{background:var(--green);color:#060608}
+.choice-btn.sel-d .choice-pill{background:#f59e0b;color:#060608}
 
 /* RESULT PANEL */
+.free-answer-wrap{margin-top:0.4rem;padding-top:0.9rem;border-top:1px dashed var(--border2)}
+.free-answer-label{font-size:0.72rem;color:var(--muted);font-weight:600;display:block;margin-bottom:0.5rem}
+.free-answer-input{width:100%;min-height:64px;background:var(--surface);border:1.5px solid var(--border2);border-radius:12px;padding:0.75rem 1rem;font-family:'Space Grotesk',sans-serif;font-size:0.88rem;color:var(--text);resize:vertical;outline:none;transition:border-color 0.15s}
+.free-answer-input:focus{border-color:rgba(124,58,237,0.4)}
+.free-answer-input:disabled{opacity:0.5}
+.free-answer-btn{width:100%;margin-top:0.6rem;padding:0.7rem;border-radius:10px;background:var(--surface2);border:1px solid var(--border2);color:var(--text);font-family:'Space Grotesk',sans-serif;font-size:0.82rem;font-weight:700;cursor:pointer;transition:all 0.15s}
+.free-answer-btn:disabled{opacity:0.35;cursor:not-allowed}
+.free-answer-btn:not(:disabled):hover{border-color:var(--accent);background:rgba(124,58,237,0.08)}
+.free-answer-recap{margin-top:1rem;padding:0.9rem 1.1rem;background:rgba(124,58,237,0.07);border-left:2px solid var(--accent);border-radius:0 10px 10px 0}
+.free-answer-recap-label{font-size:0.62rem;font-weight:800;letter-spacing:0.06em;text-transform:uppercase;color:var(--neon);display:block;margin-bottom:0.35rem}
+.free-answer-recap p{font-size:0.85rem;color:var(--text);line-height:1.6;font-style:italic}
+
 .result-panel{width:100%;background:var(--surface);border:1px solid var(--border);border-radius:20px;padding:1.5rem 1.5rem;margin-bottom:1rem;display:none;animation:pop 0.3s ease}
 .result-panel.visible{display:block}
 @keyframes pop{from{opacity:0;transform:scale(0.97)}to{opacity:1;transform:scale(1)}}
@@ -100,11 +116,15 @@ body::before{content:'';position:fixed;top:-200px;left:50%;transform:translateX(
 .sbi-label-text{white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
 .you-tag{font-size:0.55rem;font-weight:800;letter-spacing:0.07em;text-transform:uppercase;background:var(--accent);color:white;padding:2px 8px;border-radius:999px;flex-shrink:0}
 .you-tag-b{background:var(--neon2);color:#060608}
+.you-tag-c{background:var(--green);color:#060608}
+.you-tag-d{background:#f59e0b;color:#060608}
 .sbi-pct{font-family:'Syne',sans-serif;font-size:1.05rem;font-weight:900;margin-left:8px;flex-shrink:0}
 .bar-track{height:6px;background:var(--surface3);border-radius:999px;overflow:hidden}
 .bar-fill{height:100%;border-radius:999px;width:0%;transition:width 0.9s cubic-bezier(0.4,0,0.2,1)}
 .bf-a{background:linear-gradient(90deg,var(--accent),var(--neon))}
 .bf-b{background:linear-gradient(90deg,#0891b2,var(--neon2))}
+.bf-c{background:linear-gradient(90deg,#059669,var(--green))}
+.bf-d{background:linear-gradient(90deg,#d97706,#f59e0b)}
 .verdict-box{margin-top:1.1rem;padding-top:1.1rem;border-top:1px solid var(--border2);font-size:0.85rem;color:var(--muted2);line-height:1.7;font-style:italic}
 
 /* ACTIONS */
@@ -486,43 +506,36 @@ const categories = [
 ];
 
 const allQuestions = [
-  {cat:'amitie',emoji:'🤫',text:"Ton meilleur ami te confie qu'il trompe sa copine. Sa copine, c'est aussi ton amie. Tu fais quoi ?",choices:["Je me tais. C'est pas mon couple.","Je lui dis à elle. Elle mérite de savoir."],stats:[58,42],votes:24381,verdict:"58% gardent le secret. Mais dans les commentaires, c'est toujours la guerre — 'trahir l'ami' vs 'trahir la vérité'. Il n'y a pas de bonne réponse, juste deux loyautés en conflit."},
-  {cat:'amitie',emoji:'😤',text:"Ton ami te demande de lui mentir un alibi pour sa femme. T'as rien à y gagner, mais lui il est dans la merde si tu dis non.",choices:["Je couvre. C'est mon ami.","Je refuse. Je mens pas pour ça."],stats:[47,53],votes:19204,verdict:"53% refusent. La loyauté a ses limites — et mentir pour couvrir quelqu'un, c'est aussi prendre le risque que ça retombe sur toi."},
-  {cat:'amitie',emoji:'💔',text:"Ton meilleur ami sort avec quelqu'un qui te traite mal en privé. Il est aveugle. Tu lui dis la vérité ?",choices:["Oui. Il doit savoir qui est vraiment cette personne.","Non. Il le découvrira lui-même."],stats:[72,28],votes:16782,verdict:"72% choisissent de parler. Mais dans les faits, la plupart des gens qui ont dit la vérité à un ami amoureux l'ont regretté — du moins au début."},
-  {cat:'amitie',emoji:'🎂',text:"Ton ami organise une fête surprise pour toi. Tu l'as découverte par accident. Tu fais semblant d'être surpris ou tu lui avoues ?",choices:["Je joue le jeu. Ça lui ferait de la peine.","Je lui avoue. Je veux pas lui mentir."],stats:[83,17],votes:21543,verdict:"83% jouent le jeu. C'est un des rares cas où mentir est clairement l'acte le plus gentil."},
-  {cat:'amitie',emoji:'💸',text:"Ton ami t'a prêté 500€ il y a 1 an. Il n'en parle plus. Toi t'as l'argent. Tu le rembourses spontanément ou tu attends qu'il demande ?",choices:["Je le rembourse sans attendre qu'il demande.","Il a pas redemandé donc c'est bon pour lui."],stats:[61,39],votes:18920,verdict:"39% attendent. C'est souvent comme ça que les amitiés se fissurent en silence — pas sur les grandes choses, mais sur les petites."},
-  {cat:'amitie',emoji:'📱',text:"Tu vois que ton ami lit tes messages sans répondre depuis 3 jours. Tu lui envoies un message pour dire que t'as vu qu'il a lu ?",choices:["Oui. S'il lit sans répondre, il mérite de le savoir.","Non. Je l'ignore aussi désormais."],stats:[34,66],votes:22108,verdict:"66% ignorent à leur tour. Le silence contre le silence — c'est le combat passif-agressif le plus courant de notre génération."},
-  {cat:'amitie',emoji:'🎤',text:"Ton ami te demande ton avis honnête sur sa musique. Elle est vraiment mauvaise. Il a mis des mois dessus.",choices:["Je dis la vérité gentiment.","Je dis que c'est bien. Faut pas briser ses rêves."],stats:[55,45],votes:17654,verdict:"55% disent la vérité. Mais 'gentiment' veut dire quoi exactement ? C'est souvent là que les gens échouent — pas sur l'intention, sur l'exécution."},
-  {cat:'amitie',emoji:'🏖️',text:"Ton ami annule vos vacances 2 semaines avant le départ. Tu perds 300€ non remboursables. Il propose pas de t'aider à couvrir.",choices:["Je lui demande de partager la perte.","Je l'avale. C'est mon ami, les accidents ça arrive."],stats:[68,32],votes:15432,verdict:"68% demandent un partage. Être ami n'oblige pas à absorber les coûts financiers des décisions des autres."},
-  {cat:'couple',emoji:'💔',text:"Ton ex te revient après 2 ans en disant que c'était l'erreur de sa vie. T'as refait ta vie et t'es heureux(se). Mais une part de toi ressent encore quelque chose.",choices:["Je ferme la porte. Mon bonheur actuel vaut plus.","Je lui donne une chance. On ne sait jamais."],stats:[65,35],votes:42109,verdict:"35% rouvrent la porte. Presque 1 personne sur 3 rouvrirait quelque chose qu'ils ont mis des années à dépasser."},
-  {cat:'couple',emoji:'📱',text:"Tu as le téléphone de ton/ta partenaire déverrouillé devant toi. Il/Elle est sous la douche. T'as jamais eu de raison de douter. Tu regardes ?",choices:["Non. Faire confiance c'est pas regarder.","Juste un petit coup d'œil. Personne le saura."],stats:[52,48],votes:38764,verdict:"48% regardent. La confiance, c'est aussi résister quand personne ne regarde."},
-  {cat:'couple',emoji:'💍',text:"Tu découvres que la personne que tu fréquentes depuis 6 mois est encore légalement mariée. Elle dit que le divorce est en cours.",choices:["Je coupe immédiatement.","Je continue. Le papier c'est juste un papier."],stats:[71,29],votes:29341,verdict:"71% coupent. La confiance se construit sur des faits, pas des promesses."},
-  {cat:'couple',emoji:'😬',text:"Ton/ta partenaire grossit visiblement depuis 1 an. Il/Elle te demande si t'es toujours attiré(e). Tu l'es moins. Tu dis la vérité ?",choices:["Oui. Il/elle mérite une réponse honnête.","Non. Certaines vérités font plus de mal que de bien."],stats:[33,67],votes:31205,verdict:"67% mentent ou esquivent. Dans un couple, jusqu'où l'honnêteté est-elle un droit ou une arme ?"},
-  {cat:'couple',emoji:'✈️',text:"Tu reçois une offre de travail de rêve à l'étranger. Ton/ta partenaire ne peut pas partir. La relation est sérieuse depuis 3 ans.",choices:["Je prends le poste. Ma carrière, c'est aussi ma vie.","Je reste. Une opportunité se refera, pas cette relation."],stats:[58,42],votes:27893,verdict:"58% partent. La question c'est : qui tu veux être, pas juste avec qui."},
-  {cat:'couple',emoji:'🤐',text:"Ton/ta partenaire t'a dit quelque chose d'humiliant lors d'une dispute. Il/Elle s'est excusé(e). Toi t'as pas oublié.",choices:["Je passe par-dessus. Tout le monde dit des choses sous la colère.","Ça a changé quelque chose. Je peux pas faire semblant."],stats:[44,56],votes:22107,verdict:"56% disent que ça a changé quelque chose. Le pardon et l'oubli sont deux choses très différentes."},
-  {cat:'argent',emoji:'💵',text:"Tu trouves une enveloppe avec 3000€ en cash dans la rue. Personne ne t'a vu. Aucune adresse dessus.",choices:["Je la garde. C'est pas ma faute si quelqu'un est bête.","Je la dépose au commissariat."],stats:[71,29],votes:31204,verdict:"71% gardent l'argent. Le vrai toi, c'est celui qui est seul avec l'enveloppe."},
-  {cat:'argent',emoji:'🏦',text:"Ta banque te crédite par erreur 8000€. Tu attends qu'ils s'en rendent compte ou tu les contactes immédiatement ?",choices:["Je les contacte. C'est pas mon argent.","J'attends. Si personne voit rien, tant mieux."],stats:[48,52],votes:24567,verdict:"52% attendent. Entre la loi et le comportement réel, il y a un écart que ce résultat illustre parfaitement."},
-  {cat:'argent',emoji:'🎰',text:"Ton ami te propose un investissement 'garanti' qui peut doubler ta mise en 3 mois. T'as 2000€ de côté. Il a l'air convaincu.",choices:["Je refuse. Rien ne garantit rien.","Je tente. Avec 2000€ seulement."],stats:[77,23],votes:19832,verdict:"77% refusent. Mais 23% tentent quand même — c'est exactement comme ça que fonctionnent les arnaques."},
-  {cat:'argent',emoji:'💳',text:"Au restaurant, le serveur ne t'a pas facturé un plat à 25€. L'addition arrive. Tu le signales ?",choices:["Oui. Je le signale.","Non. Bonne journée pour moi."],stats:[43,57],votes:28109,verdict:"57% gardent le silence. On protège activement notre argent, rarement celui des autres."},
-  {cat:'argent',emoji:'🤝',text:"Ton patron t'offre une promo et +30% de salaire. Tu sais que ton collègue qui méritait plus que toi a été écarté.",choices:["J'accepte. C'est pas moi qui ai décidé ça.","Je refuse si mon collègue n'est pas compensé."],stats:[79,21],votes:27553,verdict:"79% acceptent. Il est très facile d'avoir des principes quand on n'a rien à perdre."},
-  {cat:'argent',emoji:'🧾',text:"Tu fais 10 000€ de chiffre d'affaires en freelance. Tu peux déclarer 6 000€ officiellement. Quasi personne le contrôle.",choices:["Je déclare tout. Les règles sont les règles.","Je déclare partiellement. Tout le monde fait ça."],stats:[31,69],votes:22341,verdict:"69% déclarent partiellement. C'est un des dilemmes où les gens sont les plus honnêtes dans leurs réponses."},
-  {cat:'famille',emoji:'😬',text:"Tu découvres que ton père a eu un enfant caché il y a 20 ans. Tu as un demi-frère/sœur que toute ta famille ignore.",choices:["Rien. Ça va juste tout détruire pour rien.","Je lui dis. Elle a le droit de savoir."],stats:[44,56],votes:18762,verdict:"56% choisissent de dire la vérité. Tout dépend de si tu crois que la vérité libère ou détruit."},
-  {cat:'famille',emoji:'🏠',text:"Tes parents vieillissants ont besoin d'aide. Tu peux les accueillir chez toi ou les placer dans une maison de retraite de qualité.",choices:["Je les accueille chez moi.","Je les place dans une structure adaptée."],stats:[62,38],votes:23109,verdict:"38% choisissent la maison de retraite. La culpabilité sociale autour de ce choix est bien plus forte que la réalité."},
-  {cat:'famille',emoji:'💔',text:"Ton frère/ta sœur et ton meilleur ami ont une dispute violente. Les deux te demandent de choisir ton camp.",choices:["Je choisis ma famille. Le sang c'est le sang.","Je reste neutre. Je refuse de choisir."],stats:[29,71],votes:16543,verdict:"71% restent neutres. La neutralité dans un conflit familial est souvent la position la plus difficile à tenir."},
-  {cat:'famille',emoji:'🎓',text:"Tes parents ont tout sacrifié pour payer tes études. Tu veux changer de voie à mi-parcours pour quelque chose de moins 'stable'.",choices:["Je change. C'est ma vie.","Je finis. Je leur dois au moins ça."],stats:[53,47],votes:19876,verdict:"47% finissent par obligation morale. La dette émotionnelle envers les parents est l'une des pressions les moins visibles."},
-  {cat:'famille',emoji:'🤐',text:"Tu sais que ton cousin arnaque des personnes âgées en ligne. La famille ne sait pas.",choices:["Je le dénonce. Peu importe que ce soit la famille.","Je lui parle en privé d'abord avant toute chose."],stats:[41,59],votes:14320,verdict:"59% préfèrent le dialogue en famille. À quel moment la protection familiale devient-elle de la complicité ?"},
-  {cat:'famille',emoji:'👶',text:"Tu apprends que tu es adopté(e) à l'âge de 28 ans. Tes parents ne te l'avaient jamais dit.",choices:["Je leur en veux. Ils auraient dû me dire la vérité.","Je comprends. Ils l'ont fait par amour."],stats:[66,34],votes:21087,verdict:"66% en veulent à leurs parents. Apprendre aussi tard que son histoire n'est pas ce qu'on croyait, c'est un deuil réel."},
-  {cat:'boulot',emoji:'🏢',text:"Tu découvres que ton entreprise pollue illégalement. T'as des preuves. Dénoncer risque de te coûter ton poste.",choices:["Je dénonce. Certaines choses valent plus qu'un job.","Je me tais. J'ai des factures à payer."],stats:[49,51],votes:22341,verdict:"51% se taisent. Le courage a un coût financier réel — on ne peut pas demander aux gens de sacrifier leur stabilité."},
-  {cat:'boulot',emoji:'😴',text:"T'es en télétravail. Tu termines ton travail en 4h alors que tu es censé bosser 8h. Tu ne fais rien de plus. Tu le dis à ton patron ?",choices:["Non. J'ai fait ce qu'on m'a demandé.","Je lui dis et on renégocie les missions."],stats:[74,26],votes:31087,verdict:"74% gardent le silence. Une entreprise paie-t-elle pour du temps ou pour des résultats ?"},
-  {cat:'boulot',emoji:'🤥',text:"En entretien d'embauche pour le job de ta vie, on te demande si tu maîtrises un logiciel que tu n'as jamais utilisé.",choices:["Je dis oui. Je vais apprendre en quelques jours.","Je suis honnête sur mon niveau réel."],stats:[62,38],votes:18654,verdict:"62% mentent. Dans les faits, la plupart s'en sortent — mais c'est un pari risqué."},
-  {cat:'boulot',emoji:'💼',text:"Ton collègue prend le crédit de ton travail devant le patron. En réunion. Devant tout le monde.",choices:["Je rectifie immédiatement en réunion.","Je me tais et j'en parle en privé après."],stats:[45,55],votes:19432,verdict:"55% préfèrent le privé. Il n'y a pas de bonne réponse, juste deux types de courage différents."},
-  {cat:'boulot',emoji:'📧',text:"Tu reçois une offre d'un concurrent — meilleur salaire, meilleur poste. Ton patron actuel t'a tout appris et compte sur toi.",choices:["Je pars. Ma carrière avant tout.","Je reste. La loyauté a de la valeur."],stats:[69,31],votes:25109,verdict:"69% partent. Les entreprises ne font pas de cadeaux — il n'y a aucune raison objective que les employés en fassent non plus."},
-  {cat:'chaud',emoji:'🏛️',text:"Tu peux voter pour un candidat moralement douteux dont les politiques t'aideraient directement, ou un candidat irréprochable qui changera rien pour toi.",choices:["Je vote pour mes intérêts. C'est à ça que sert un vote.","Je vote pour mes valeurs, même si ça me coûte."],stats:[57,43],votes:34109,verdict:"57% votent pour leurs intérêts. Peut-on séparer intérêt personnel et bien commun ?"},
-  {cat:'chaud',emoji:'📸',text:"Tu as des photos compromettantes de ton ex qui pourraient lui nuire. Il/Elle t'a trahi(e) gravement.",choices:["Je les supprime immédiatement. Aucune revanche ne vaut ça.","Je les garde sans jamais les utiliser. Juste... au cas où."],stats:[64,36],votes:28432,verdict:"36% gardent les photos. La revanche ne doit jamais avoir de filet de sécurité."},
-  {cat:'chaud',emoji:'🤖',text:"Une IA peut détecter avec 89% de précision si un candidat à l'embauche ment sur son CV. Ton entreprise veut l'utiliser sans le dire aux candidats.",choices:["Je refuse d'utiliser un outil non-consenti.","89% c'est utile. On l'utilise."],stats:[53,47],votes:19876,verdict:"47% acceptent l'outil. Le consentement est-il négociable quand les enjeux sont importants ?"},
-  {cat:'chaud',emoji:'🧬',text:"On peut dépister génétiquement ton enfant à naître pour des maladies graves, mais aussi pour certains traits de personnalité.",choices:["Maladies seulement. La personnalité, c'est leur vie à eux.","Tout. Je veux être préparé(e) au maximum."],stats:[71,29],votes:22654,verdict:"29% veulent tout savoir. Derrière ce chiffre, il y a une vraie question sur ce qu'on ferait avec cette information."},
-  {cat:'chaud',emoji:'⚖️',text:"Tu es juré dans un procès. Tu es convaincu à 95% que l'accusé est coupable. Mais les preuves officielles ne suffisent pas.",choices:["Je vote non-coupable. La loi c'est la loi.","Je vote coupable. Ma conviction intime compte."],stats:[68,32],votes:17321,verdict:"68% suivent la loi malgré leur conviction. C'est le fondement de l'État de droit."},
-  {cat:'chaud',emoji:'🌍',text:"Tu peux adopter une habitude qui te coûte 200€/an de plus mais réduit significativement ton empreinte carbone.",choices:["Je le fais. Je peux pas prêcher sans agir.","Non. Mon impact individuel est négligeable de toute façon."],stats:[44,56],votes:29087,verdict:"56% ne changent pas leur comportement malgré leurs convictions. L'écart entre ce qu'on croit et ce qu'on fait est peut-être le phénomène psychologique le plus documenté."},
+  {cat:'amitie',emoji:'🤫',text:"Ta meilleure amie te confie qu'elle pense que son/sa partenaire la trompe. Vous êtes proches tous les deux. Tu fais quoi ?",choices:["Je me tais et j'attends qu'elle m'en reparle.","Je l'aide à vérifier si elle me le demande.","Je lui conseille d'en parler directement avec lui/elle.","Je reste neutre, ce n'est pas à moi de juger."],stats:[31,27,30,12],votes:24381,verdict:"31% préfèrent attendre. Le reste se partage entre vérifier, encourager le dialogue ou rester neutre — preuve qu'il n'y a pas une seule bonne façon de soutenir quelqu'un."},
+  {cat:'amitie',emoji:'😤',text:"Un·e ami·e te demande de mentir pour le/la couvrir auprès de son/sa partenaire. Tu n'as rien à y gagner, mais refuser pourrait le/la mettre en difficulté.",choices:["Je couvre. C'est mon ami·e.","Je refuse. Je ne mens pas pour ça.","Je lui propose une autre solution.","Je lui dis d'assumer lui/elle-même."],stats:[24,32,28,16],votes:19204,verdict:"32% refusent de mentir. La loyauté a ses limites — et mentir pour couvrir quelqu'un, c'est aussi prendre le risque que ça retombe sur toi."},
+  {cat:'amitie',emoji:'💔',text:"Ton/ta meilleur·e ami·e sort avec quelqu'un qui le/la traite mal en privé. Il/elle semble aveugle à la situation. Tu lui dis la vérité ?",choices:["Oui, directement et sans détour.","Oui, mais avec beaucoup de précautions.","Non, il/elle le découvrira par lui/elle-même.","Je lui pose des questions pour qu'il/elle réalise seul·e."],stats:[28,33,21,18],votes:16782,verdict:"61% choisissent de parler, d'une manière ou d'une autre. Mais dans les faits, la plupart des gens qui ont dit la vérité à un·e ami·e amoureux·se l'ont regretté — du moins au début."},
+  {cat:'amitie',emoji:'🎂',text:"Tes ami·e·s organisent une fête surprise pour toi. Tu l'as découverte par accident. Tu fais semblant d'être surpris·e ou tu leur avoues ?",choices:["Je joue le jeu jusqu'au bout.","Je leur avoue avant la fête.","Je leur avoue après la fête.","Je leur fais comprendre subtilement que je sais."],stats:[58,17,15,10],votes:21543,verdict:"58% jouent le jeu jusqu'au bout. C'est un des rares cas où mentir est clairement l'acte le plus gentil."},
+  {cat:'amitie',emoji:'💸',text:"Un·e ami·e t'a prêté 500€ il y a 1 an. Il/elle n'en parle plus. Toi tu as l'argent. Tu le rembourses spontanément ou tu attends qu'il/elle demande ?",choices:["Je le rembourse sans attendre.","J'attends qu'il/elle redemande.","Je propose un échéancier.","J'oublie complètement, mauvaise mémoire."],stats:[54,21,19,6],votes:18920,verdict:"54% remboursent spontanément. C'est souvent dans les petites choses, pas les grandes, que les amitiés se fissurent en silence."},
+  {cat:'amitie',emoji:'📱',text:"Tu vois qu'un·e ami·e lit tes messages sans répondre depuis 3 jours. Tu lui envoies un message pour le faire remarquer ?",choices:["Oui, directement.","Non, je l'ignore aussi désormais.","Je lui envoie autre chose pour tester.","J'appelle plutôt que d'écrire."],stats:[19,52,17,12],votes:22108,verdict:"52% ignorent à leur tour. Le silence contre le silence — c'est le combat passif-agressif le plus courant de notre génération."},
+  {cat:'couple',emoji:'💔',text:"Ton/ta ex te recontacte après 2 ans en disant que c'était l'erreur de sa vie. Tu as refait ta vie et tu es heureux·se. Mais une part de toi ressent encore quelque chose.",choices:["Je ferme la porte. Mon bonheur actuel vaut plus.","Je lui donne une chance, on ne sait jamais.","J'en parle d'abord avec mon/ma partenaire actuel·le.","Je prends du temps avant de répondre."],stats:[44,21,19,16],votes:42109,verdict:"44% ferment la porte directement. Mais plus d'un tiers laissent une ouverture — preuve que les histoires non résolues restent vivaces longtemps."},
+  {cat:'couple',emoji:'📱',text:"Tu as accès au téléphone déverrouillé de ton/ta partenaire, qui est sous la douche. Tu n'as jamais eu de raison de douter. Tu regardes ?",choices:["Non, faire confiance c'est ne pas regarder.","Juste un coup d'œil rapide.","Je regarde en détail.","Je lui demande directement après."],stats:[51,28,9,12],votes:38764,verdict:"51% résistent à la tentation. La confiance, c'est aussi résister quand personne ne regarde."},
+  {cat:'couple',emoji:'💍',text:"Tu découvres que la personne que tu fréquentes depuis 6 mois est encore légalement marié·e. Iel dit que le divorce est en cours.",choices:["Je coupe immédiatement.","Je continue, le papier c'est juste administratif.","Je demande des preuves concrètes du divorce.","Je mets une limite de temps avant de décider."],stats:[47,17,22,14],votes:29341,verdict:"47% coupent net. La confiance se construit sur des faits vérifiables, pas seulement des promesses."},
+  {cat:'couple',emoji:'😬',text:"Ton/ta partenaire a beaucoup changé physiquement depuis 1 an et te demande si tu es toujours autant attiré·e. Tu l'es un peu moins. Tu dis la vérité ?",choices:["Oui, il/elle mérite une réponse honnête.","Non, certaines vérités font plus de mal que de bien.","Je reformule en mettant l'accent sur autre chose.","Je détourne la question."],stats:[24,38,29,9],votes:31205,verdict:"38% évitent la confrontation directe. Dans un couple, jusqu'où l'honnêteté est-elle un droit ou une arme ?"},
+  {cat:'couple',emoji:'✈️',text:"Tu reçois une offre de travail de rêve à l'étranger. Ton/ta partenaire ne peut pas te suivre. La relation est sérieuse depuis 3 ans.",choices:["Je prends le poste, ma carrière compte aussi.","Je reste, une opportunité se représentera.","On essaie la distance un temps.","On en discute longuement avant de trancher ensemble."],stats:[31,27,17,25],votes:27893,verdict:"31% partent, mais le reste cherche un compromis. La question posée par ce dilemme : qui tu veux être, pas seulement avec qui."},
+  {cat:'couple',emoji:'🤐',text:"Ton/ta partenaire t'a dit quelque chose d'humiliant lors d'une dispute. Iel s'est excusé·e depuis. Toi tu n'as pas oublié.",choices:["Je passe par-dessus, tout le monde dérape sous le coup de la colère.","Quelque chose a changé, je ne peux pas faire comme si de rien n'était.","J'en reparle calmement plus tard.","Je laisse du temps faire son œuvre."],stats:[22,32,28,18],votes:22107,verdict:"32% disent que quelque chose a définitivement changé. Le pardon et l'oubli sont deux choses très différentes."},
+  {cat:'argent',emoji:'💵',text:"Tu trouves une enveloppe avec 3000€ en cash dans la rue. Personne ne t'a vu. Aucune adresse dessus.",choices:["Je la garde entièrement.","Je la dépose au commissariat.","Je garde une partie et signale le reste.","J'essaie de retrouver le/la propriétaire moi-même."],stats:[48,29,9,14],votes:31204,verdict:"48% gardent l'argent. Le vrai toi, c'est peut-être celui qui est seul avec l'enveloppe."},
+  {cat:'argent',emoji:'🏦',text:"Ta banque te crédite par erreur 8000€. Tu attends qu'elle s'en rende compte ou tu la contactes immédiatement ?",choices:["Je la contacte tout de suite.","J'attends de voir ce qui se passe.","J'utilise une petite partie en attendant.","Je mets l'argent de côté sans y toucher."],stats:[48,26,8,18],votes:24567,verdict:"48% préviennent immédiatement, mais plus de la moitié laissent planer le doute un moment. L'écart entre la loi et le comportement réel est ici parfaitement illustré."},
+  {cat:'argent',emoji:'🎰',text:"Un·e ami·e te propose un investissement 'garanti' qui peut doubler ta mise en 3 mois. Tu as 2000€ de côté. Iel a l'air convaincu·e.",choices:["Je refuse, rien n'est jamais garanti.","Je tente avec une petite somme.","Je demande à voir des preuves concrètes avant.","Je me renseigne ailleurs d'abord."],stats:[44,18,21,17],votes:19832,verdict:"44% refusent net. Mais ceux qui tentent ou hésitent montrent exactement le mécanisme psychologique qui alimente les arnaques."},
+  {cat:'argent',emoji:'💳',text:"Au restaurant, le service ne t'a pas facturé un plat à 25€. L'addition arrive. Tu le signales ?",choices:["Oui, je le signale.","Non, tant mieux pour moi.","Je laisse un pourboire équivalent à la place.","Ça dépend du montant total de l'addition."],stats:[33,39,16,12],votes:28109,verdict:"39% gardent le silence. On protège activement notre argent, plus rarement celui des autres."},
+  {cat:'argent',emoji:'🤝',text:"Ton/ta employeur·se t'offre une promotion et +30% de salaire. Tu sais qu'un·e collègue qui méritait plus que toi a été écarté·e.",choices:["J'accepte, ce n'est pas moi qui ai décidé.","Je refuse si mon/ma collègue n'est pas compensé·e.","J'accepte mais j'en parle à la direction.","Je négocie pour que mon/ma collègue soit aussi récompensé·e."],stats:[39,21,19,21],votes:27553,verdict:"39% acceptent sans condition. Il est souvent plus facile d'avoir des principes quand on n'a rien à perdre soi-même."},
+  {cat:'famille',emoji:'😬',text:"Tu découvres qu'un de tes parents a eu un enfant caché il y a 20 ans. Tu as un demi-frère ou une demi-sœur que toute la famille ignore.",choices:["Je ne dis rien, ça va tout détruire pour rien.","Je le dis, iel a le droit de savoir.","J'en parle d'abord au parent concerné.","Je cherche à contacter cette personne directement."],stats:[26,30,29,15],votes:18762,verdict:"30% choisissent la vérité directe. Tout dépend de si tu crois que la vérité libère ou détruit."},
+  {cat:'famille',emoji:'🏠',text:"Tes parents vieillissants ont besoin d'aide au quotidien. Tu peux les accueillir chez toi ou les orienter vers une structure de qualité adaptée.",choices:["Je les accueille chez moi.","Je les oriente vers une structure adaptée.","On partage la charge avec ma fratrie.","On engage de l'aide à domicile."],stats:[34,21,25,20],votes:23109,verdict:"21% choisissent une structure adaptée — la culpabilité sociale autour de ce choix est souvent bien plus forte que la réalité des besoins."},
+  {cat:'famille',emoji:'💔',text:"Ta sœur/ton frère et ton/ta meilleur·e ami·e ont une dispute violente. Les deux te demandent de choisir ton camp.",choices:["Je choisis ma famille.","Je reste neutre, je refuse de choisir.","J'essaie de les réconcilier.","Je prends de la distance avec les deux temporairement."],stats:[16,46,24,14],votes:16543,verdict:"46% restent neutres. La neutralité dans un conflit familial est souvent la position la plus difficile à tenir, mais aussi la plus juste."},
+  {cat:'famille',emoji:'🎓',text:"Tes parents ont tout sacrifié pour financer tes études. Tu veux changer de voie à mi-parcours pour quelque chose de moins 'stable'.",choices:["Je change, c'est ma vie.","Je finis, je leur dois bien ça.","J'en discute avec eux avant de décider.","Je termine puis je me réoriente après."],stats:[27,20,31,22],votes:19876,verdict:"31% privilégient le dialogue avant de trancher. La dette émotionnelle envers les parents est l'une des pressions les moins visibles, mais des plus fortes."},
+  {cat:'boulot',emoji:'🏢',text:"Tu découvres que ton entreprise pollue illégalement. Tu as des preuves. Dénoncer risque de te coûter ton poste.",choices:["Je dénonce, certaines choses valent plus qu'un emploi.","Je me tais, j'ai des factures à payer.","Je dénonce de façon anonyme.","J'en parle d'abord en interne avant d'aller plus loin."],stats:[24,27,25,24],votes:22341,verdict:"27% se taisent, mais presque autant choisissent l'anonymat. Le courage a un coût financier réel — on ne peut pas exiger des gens qu'ils sacrifient leur stabilité."},
+  {cat:'boulot',emoji:'😴',text:"En télétravail, tu termines ta charge de travail en 4h sur une journée censée en compter 8. Tu ne fais rien de plus. Tu le signales à ton/ta responsable ?",choices:["Non, j'ai fait ce qu'on m'a demandé.","Oui, et on renégocie mes missions.","Je prends sur moi d'autres tâches sans le dire.","J'utilise le temps restant pour me former."],stats:[42,24,16,18],votes:31087,verdict:"42% gardent le silence. Une entreprise paie-t-elle pour du temps ou pour des résultats ?"},
+  {cat:'boulot',emoji:'🤥',text:"En entretien d'embauche pour le poste de tes rêves, on te demande si tu maîtrises un logiciel que tu n'as jamais utilisé.",choices:["Je dis oui, je vais apprendre vite.","Je suis honnête sur mon niveau réel.","Je dis que je connais les bases, en exagérant un peu.","Je propose de me former avant la prise de poste."],stats:[27,33,21,19],votes:18654,verdict:"33% restent honnêtes sur leur niveau. Mentir en entretien est un pari risqué, même si beaucoup s'en sortent."},
+  {cat:'boulot',emoji:'💼',text:"Un·e collègue s'approprie le mérite de ton travail devant ton/ta responsable, en réunion, devant tout le monde.",choices:["Je rectifie immédiatement, en réunion.","Je me tais et j'en parle en privé après.","J'envoie un email récapitulatif juste après.","Je laisse passer cette fois, mais je garde une trace."],stats:[28,33,22,17],votes:19432,verdict:"33% préfèrent le privé. Il n'y a pas de bonne réponse universelle, juste deux formes de courage différentes."},
+  {cat:'chaud',emoji:'🏛️',text:"Tu peux voter pour un·e candidat·e moralement douteux·se dont les politiques t'aideraient directement, ou un·e candidat·e irréprochable qui ne changera rien pour toi.",choices:["Je vote pour mes intérêts personnels.","Je vote pour mes valeurs, même si ça me coûte.","Je m'abstiens.","Je vote blanc."],stats:[37,40,12,11],votes:34109,verdict:"40% votent pour leurs valeurs malgré le coût personnel. Peut-on vraiment séparer intérêt individuel et bien commun ?"},
+  {cat:'chaud',emoji:'🤖',text:"Une IA peut détecter avec 89% de précision si une personne ment sur son CV lors d'un recrutement. Ton entreprise veut l'utiliser sans en informer les candidat·e·s.",choices:["Je refuse d'utiliser un outil non-consenti.","89% c'est utile, on l'utilise.","Je propose d'informer les candidat·e·s en amont.","Je demande un avis juridique avant toute décision."],stats:[34,21,29,16],votes:19876,verdict:"34% refusent par principe de consentement. Le consentement est-il négociable quand les enjeux semblent importants ?"},
+  {cat:'chaud',emoji:'🧬',text:"On peut dépister génétiquement un enfant à naître pour des maladies graves, mais aussi pour certains traits de personnalité.",choices:["Maladies seulement, le reste appartient à sa vie.","Tout, je veux être préparé·e au maximum.","Je laisse le choix à mon/ma partenaire.","Je refuse tout dépistage non médical."],stats:[46,18,15,21],votes:22654,verdict:"18% veulent tout savoir. Derrière ce chiffre se cache une vraie question sur ce qu'on ferait réellement de cette information."},
+  {cat:'chaud',emoji:'⚖️',text:"Tu es juré·e dans un procès. Tu es convaincu·e à 95% que l'accusé·e est coupable, mais les preuves officielles ne suffisent pas légalement.",choices:["Je vote non-coupable, la loi est la loi.","Je vote coupable, ma conviction intime compte.","Je demande un délai pour réexaminer les preuves.","Je fais part de mon doute aux autres juré·e·s."],stats:[39,18,21,22],votes:17321,verdict:"39% suivent la loi malgré leur conviction personnelle. C'est l'un des fondements de l'État de droit."},
+  {cat:'chaud',emoji:'🌍',text:"Tu peux adopter une habitude qui te coûte 200€ de plus par an mais réduit significativement ton empreinte carbone.",choices:["Je le fais, je ne peux pas prêcher sans agir.","Non, mon impact individuel est négligeable.","Je cherche une alternative moins coûteuse.","Je le fais seulement si mon entourage fait pareil."],stats:[34,22,28,16],votes:29087,verdict:"22% estiment que leur impact individuel ne compte pas. L'écart entre ce qu'on croit et ce qu'on fait reste l'un des phénomènes psychologiques les plus documentés."},
 ];
 
 // PROFILE TYPES
@@ -538,6 +551,7 @@ let currentCat = 'all';
 let sessionQuestions = [];
 let currentQIdx = 0;
 let picked = null;
+let freeTextAnswer = '';
 let totalAnswered = parseInt(localStorage.getItem('totalAnswered') || '0');
 let sessionLog = [];
 
@@ -593,8 +607,10 @@ function shuffle(arr) {
 
 function renderQ() {
   picked = null;
+  freeTextAnswer = '';
   const q = sessionQuestions[currentQIdx];
   const total = sessionQuestions.length;
+  const letters = ['A','B','C','D'];
   document.getElementById('prog-fill').style.width = ((currentQIdx / total) * 100) + '%';
   document.getElementById('q-counter').textContent = `Question ${currentQIdx + 1} / ${total}`;
   document.getElementById('q-emoji').textContent = q.emoji;
@@ -603,12 +619,39 @@ function renderQ() {
   document.getElementById('actions').style.display = 'none';
   document.getElementById('choices').innerHTML = q.choices.map((c, i) =>
     `<button class="choice-btn" id="cb${i}" onclick="pick(${i})">
-      <span class="choice-pill">${['A','B'][i]}</span>
+      <span class="choice-pill">${letters[i]}</span>
       <span>${c}</span>
     </button>`
-  ).join('');
+  ).join('') + `
+    <div class="free-answer-wrap">
+      <span class="free-answer-label">Ou écris ta propre réponse</span>
+      <textarea id="free-answer-input" class="free-answer-input" placeholder="Ta réponse à toi…" maxlength="240" oninput="onFreeTextInput()"></textarea>
+      <button class="free-answer-btn" id="free-answer-btn" onclick="pickFree()" disabled>Valider ma réponse</button>
+    </div>`;
   document.getElementById('next-btn').textContent =
     currentQIdx < sessionQuestions.length - 1 ? 'Suivant →' : 'Voir mon bilan →';
+}
+
+function onFreeTextInput() {
+  const val = document.getElementById('free-answer-input').value.trim();
+  document.getElementById('free-answer-btn').disabled = val.length < 3;
+}
+
+function pickFree() {
+  if (picked !== null) return;
+  const val = document.getElementById('free-answer-input').value.trim();
+  if (val.length < 3) return;
+  freeTextAnswer = val;
+  picked = 'free';
+  totalAnswered++;
+  saveAnswered();
+  document.getElementById('streak-count').textContent = totalAnswered;
+  sessionLog.push({qIdx: currentQIdx, choice: 'free', freeText: val});
+  document.querySelectorAll('.choice-btn').forEach(b => b.classList.add('dimmed'));
+  document.getElementById('free-answer-input').disabled = true;
+  document.getElementById('free-answer-btn').style.display = 'none';
+  showResult('free');
+  document.getElementById('actions').style.display = 'flex';
 }
 
 function pick(idx) {
@@ -618,28 +661,35 @@ function pick(idx) {
   saveAnswered();
   document.getElementById('streak-count').textContent = totalAnswered;
   sessionLog.push({qIdx: currentQIdx, choice: idx});
+  const colorClasses = ['sel-a','sel-b','sel-c','sel-d'];
   document.querySelectorAll('.choice-btn').forEach((b, i) => {
-    if (i === idx) b.classList.add(i === 0 ? 'sel-a' : 'sel-b');
+    if (i === idx) b.classList.add(colorClasses[idx]);
     else b.classList.add('dimmed');
   });
+  const freeInput = document.getElementById('free-answer-input');
+  const freeBtn = document.getElementById('free-answer-btn');
+  if (freeInput) freeInput.disabled = true;
+  if (freeBtn) freeBtn.style.display = 'none';
   showResult(idx);
   document.getElementById('actions').style.display = 'flex';
 }
 
 function showResult(idx) {
   const q = sessionQuestions[currentQIdx];
+  const barColors = ['bf-a','bf-b','bf-c','bf-d'];
+  const letters = ['A','B','C','D'];
   document.getElementById('bars').innerHTML = q.choices.map((c, i) => {
     const pct = q.stats[i];
     const isYou = i === idx;
-    const youTag = isYou ? `<span class="you-tag ${i===1?'you-tag-b':''}">toi</span>` : '';
+    const youTag = isYou ? `<span class="you-tag you-tag-${letters[i].toLowerCase()}">toi</span>` : '';
     return `<div class="stat-bar-item">
       <div class="sbi-top">
         <span class="sbi-label"><span class="sbi-label-text">${c.slice(0,38)}${c.length>38?'…':''}</span> ${youTag}</span>
         <span class="sbi-pct">${pct}%</span>
       </div>
-      <div class="bar-track"><div class="bar-fill ${i===0?'bf-a':'bf-b'}" id="b${i}"></div></div>
+      <div class="bar-track"><div class="bar-fill ${barColors[i]}" id="b${i}"></div></div>
     </div>`;
-  }).join('');
+  }).join('') + (idx === 'free' ? `<div class="free-answer-recap"><span class="free-answer-recap-label">✍️ Ta réponse</span><p>${escHtmlQ(freeTextAnswer)}</p></div>` : '');
   document.getElementById('verdict').textContent = q.verdict;
   document.getElementById('total-votes').textContent = q.votes.toLocaleString('fr-FR');
   document.getElementById('result').classList.add('visible');
@@ -649,6 +699,10 @@ function showResult(idx) {
       if (b) b.style.width = pct + '%';
     });
   }, 60);
+}
+
+function escHtmlQ(str) {
+  return String(str).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
 }
 
 function nextQ() {
@@ -665,29 +719,48 @@ function showEnd() {
   document.getElementById('prog-fill').style.width = '100%';
   const n = sessionLog.length;
   document.getElementById('end-sub').textContent = `T'as répondu à ${n} questions. Reçois ton analyse psychologique personnalisée.`;
-  document.getElementById('end-log').innerHTML = sessionLog.map(({qIdx, choice}) => {
-    const q = sessionQuestions[qIdx];
-    const pct = q.stats[choice];
+  document.getElementById('end-log').innerHTML = sessionLog.map((l) => {
+    const q = sessionQuestions[l.qIdx];
+    if (l.choice === 'free') {
+      return `<div class="log-row">
+        <span class="log-letter">✍️</span>
+        <span>${escHtmlQ(l.freeText.slice(0,52))}${l.freeText.length>52?'…':''} — <strong style="color:var(--text)">réponse libre</strong></span>
+      </div>`;
+    }
+    const pct = pctFor(q, l.choice);
     return `<div class="log-row">
-      <span class="log-letter">${['A','B'][choice]}</span>
-      <span>${q.choices[choice].slice(0,52)}… — <strong style="color:var(--text)">${pct}% comme moi</strong></span>
+      <span class="log-letter">${['A','B','C','D'][l.choice]}</span>
+      <span>${q.choices[l.choice].slice(0,52)}… — <strong style="color:var(--text)">${pct}% comme moi</strong></span>
     </div>`;
   }).join('');
   showScreen('screen-end');
 }
 
 // ── PROFILE LOGIC ──
+function pctFor(q, choice) {
+  if (!q || choice === 'free' || choice === null || choice === undefined) return 50;
+  return q.stats[choice] !== undefined ? q.stats[choice] : 50;
+}
+function isMinorityChoice(q, choice) {
+  if (!q || choice === 'free') return false;
+  return q.stats[choice] !== undefined && q.stats[choice] < 50;
+}
+function choiceTextFor(q, l) {
+  if (l.choice === 'free') return l.freeText || '';
+  return q && q.choices[l.choice] ? q.choices[l.choice] : '';
+}
+
 function computeProfile(log) {
   const total = log.length;
   const aCount = log.filter(l => l.choice === 0).length;
   const aRatio = aCount / total;
   const avgPct = log.reduce((s, l) => {
     const q = sessionQuestions[l.qIdx];
-    return s + (q ? q.stats[l.choice] : 50);
+    return s + pctFor(q, l.choice);
   }, 0) / total;
   const minority = log.filter(l => {
     const q = sessionQuestions[l.qIdx];
-    return q && q.stats[l.choice] < 50;
+    return isMinorityChoice(q, l.choice);
   }).length;
 
   if (minority >= Math.ceil(total * 0.55)) return 'rebel';
@@ -703,11 +776,11 @@ function buildTraits(log, catId) {
   const aRatio = aCount / total;
   const minority = log.filter(l => {
     const q = sessionQuestions[l.qIdx];
-    return q && q.stats[l.choice] < 50;
+    return isMinorityChoice(q, l.choice);
   }).length;
   const avgPct = Math.round(log.reduce((s, l) => {
     const q = sessionQuestions[l.qIdx];
-    return s + (q ? q.stats[l.choice] : 50);
+    return s + pctFor(q, l.choice);
   }, 0) / total);
 
   const traits = [];
@@ -733,8 +806,8 @@ function showProfile() {
   const prof = PROFILE_TYPES[pkey];
 
   const total = log.length;
-  const minority = log.filter(l => { const q = sessionQuestions[l.qIdx]; return q && q.stats[l.choice] < 50; }).length;
-  const avgPct = Math.round(log.reduce((s, l) => { const q = sessionQuestions[l.qIdx]; return s + (q ? q.stats[l.choice] : 50); }, 0) / total);
+  const minority = log.filter(l => { const q = sessionQuestions[l.qIdx]; return isMinorityChoice(q, l.choice); }).length;
+  const avgPct = Math.round(log.reduce((s, l) => { const q = sessionQuestions[l.qIdx]; return s + pctFor(q, l.choice); }, 0) / total);
 
   document.getElementById('prof-avatar').textContent = prof.emoji;
   document.getElementById('prof-name').textContent = prof.name;
@@ -786,13 +859,13 @@ async function generateAnalysis() {
   const catLabel = currentCat === 'all' ? 'toutes catégories' : (catObj ? catObj.name : currentCat);
   const pkey = computeProfile(log);
   const prof = PROFILE_TYPES[pkey];
-  const minority = log.filter(l => { const q = sessionQuestions[l.qIdx]; return q && q.stats[l.choice] < 50; }).length;
-  const avgPct = Math.round(log.reduce((s, l) => { const q = sessionQuestions[l.qIdx]; return s + (q ? q.stats[l.choice] : 50); }, 0) / log.length);
+  const minority = log.filter(l => { const q = sessionQuestions[l.qIdx]; return isMinorityChoice(q, l.choice); }).length;
+  const avgPct = Math.round(log.reduce((s, l) => { const q = sessionQuestions[l.qIdx]; return s + pctFor(q, l.choice); }, 0) / log.length);
 
   const choicesSummary = log.slice(0, 7).map(l => {
     const q = sessionQuestions[l.qIdx];
     if (!q) return '';
-    return `- Question: "${q.text.slice(0,65)}"\n  Réponse choisie: "${q.choices[l.choice]}" (${q.stats[l.choice]}% des gens font pareil)`;
+    return `- Question: "${q.text.slice(0,65)}"\n  Réponse choisie: "${choiceTextFor(q, l)}" (${l.choice === 'free' ? 'réponse libre' : pctFor(q, l.choice) + '% des gens font pareil'})`;
   }).join('\n');
 
   const prompt = `Tu es un psychologue bienveillant qui analyse les comportements via des dilemmes de vraie vie.
@@ -841,8 +914,8 @@ Règles : utilise "tu", sois direct mais bienveillant, ne diagnostique JAMAIS de
 function shareProfile() {
   const pkey = computeProfile(sessionLog);
   const prof = PROFILE_TYPES[pkey];
-  const minority = sessionLog.filter(l => { const q = sessionQuestions[l.qIdx]; return q && q.stats[l.choice] < 50; }).length;
-  const avgPct = Math.round(sessionLog.reduce((s, l) => { const q = sessionQuestions[l.qIdx]; return s + (q ? q.stats[l.choice] : 50); }, 0) / sessionLog.length);
+  const minority = sessionLog.filter(l => { const q = sessionQuestions[l.qIdx]; return isMinorityChoice(q, l.choice); }).length;
+  const avgPct = Math.round(sessionLog.reduce((s, l) => { const q = sessionQuestions[l.qIdx]; return s + pctFor(q, l.choice); }, 0) / sessionLog.length);
   const catObj = categories.find(c => c.id === currentCat);
   const catLabel = currentCat === 'all' ? 'toutes catégories' : (catObj ? catObj.name : currentCat);
   const txt = `${prof.emoji} Mon profil psychologique — Et toi t'aurais fait quoi ?\n\nCatégorie : ${catLabel}\nProfil : ${prof.name}\n${minority}x j'ai choisi comme la minorité • ${avgPct}% d'accord avec la majorité\n\nT'aurais fait quoi, toi ? 👇\n#EtToiTAuraisFaitQuoi`;
@@ -851,12 +924,16 @@ function shareProfile() {
 }
 
 function buildShareText(q, idx) {
-  return `Et toi, t'aurais fait quoi ? 🤔\n\n"${q.text}"\n\nMoi j'ai choisi ${['A','B'][idx]} — ${q.stats[idx]}% des gens font pareil 👀\n\n#EtToiTAuraisFaitQuoi`;
+  if (idx === 'free') {
+    return `Et toi, t'aurais fait quoi ? 🤔\n\n"${q.text}"\n\nMoi j'ai écrit ma propre réponse : "${freeTextAnswer}" ✍️\n\n#EtToiTAuraisFaitQuoi`;
+  }
+  return `Et toi, t'aurais fait quoi ? 🤔\n\n"${q.text}"\n\nMoi j'ai choisi ${['A','B','C','D'][idx]} — ${pctFor(q, idx)}% des gens font pareil 👀\n\n#EtToiTAuraisFaitQuoi`;
 }
 function buildProfileText() {
-  const lines = sessionLog.map(({qIdx,choice}) => {
-    const q = sessionQuestions[qIdx];
-    return `${['A','B'][choice]} — ${q.choices[choice].slice(0,42)}… (${q.stats[choice]}%)`;
+  const lines = sessionLog.map((l) => {
+    const q = sessionQuestions[l.qIdx];
+    if (l.choice === 'free') return `✍️ — ${l.freeText.slice(0,42)}${l.freeText.length>42?'…':''} (réponse libre)`;
+    return `${['A','B','C','D'][l.choice]} — ${q.choices[l.choice].slice(0,42)}… (${pctFor(q, l.choice)}%)`;
   }).join('\n');
   return `Mes réponses — Et toi t'aurais fait quoi ? 🎯\n\n${lines}\n\nToi tu ferais quoi ? 👇\n#EtToiTAuraisFaitQuoi`;
 }
@@ -928,9 +1005,9 @@ function genDeep(el){
   var co=categories.find(function(c){return c.id===currentCat;});
   var cl=currentCat==='all'?'toutes catégories':(co?co.name:currentCat);
   var pk=computeProfile(log); var pf=PROFILE_TYPES[pk];
-  var mn=log.filter(function(l){var q=sessionQuestions[l.qIdx];return q&&q.stats[l.choice]<50;}).length;
-  var ap=Math.round(log.reduce(function(s,l){var q=sessionQuestions[l.qIdx];return s+(q?q.stats[l.choice]:50);},0)/log.length);
-  var cs=log.map(function(l){var q=sessionQuestions[l.qIdx];return q?'"'+q.text.slice(0,55)+'" -> '+q.choices[l.choice]+' ('+q.stats[l.choice]+'%)':'';}).filter(Boolean).join('\n');
+  var mn=log.filter(function(l){var q=sessionQuestions[l.qIdx];return isMinorityChoice(q,l.choice);}).length;
+  var ap=Math.round(log.reduce(function(s,l){var q=sessionQuestions[l.qIdx];return s+pctFor(q,l.choice);},0)/log.length);
+  var cs=log.map(function(l){var q=sessionQuestions[l.qIdx];return q?'"'+q.text.slice(0,55)+'" -> '+choiceTextFor(q,l)+' ('+(l.choice==='free'?'réponse libre':pctFor(q,l.choice)+'%')+')':'';}).filter(Boolean).join('\n');
   el.innerHTML='<div style="position:absolute;top:0;left:0;right:0;height:2px;background:linear-gradient(135deg,#f59e0b,#fbbf24,#f97316)"></div>'
     +'<div class="plc-hd"><span class="plc-ic">🔮</span><div><div class="ac-title">Analyse psychologique profonde</div><div class="ac-sub">Premium · IA avancée</div></div></div>'
     +'<div class="ai-loading on" id="dldr"><div class="dots"><span></span><span></span><span></span></div><div class="ai-loading-text">Analyse émotionnelle...</div></div>'
@@ -953,8 +1030,8 @@ function genDeep(el){
 function genRadar(el){
   var log=sessionLog; var total=log.length;
   var ar=log.filter(function(l){return l.choice===0;}).length/total;
-  var mn=log.filter(function(l){var q=sessionQuestions[l.qIdx];return q&&q.stats[l.choice]<50;}).length;
-  var ap=log.reduce(function(s,l){var q=sessionQuestions[l.qIdx];return s+(q?q.stats[l.choice]:50);},0)/total;
+  var mn=log.filter(function(l){var q=sessionQuestions[l.qIdx];return isMinorityChoice(q,l.choice);}).length;
+  var ap=log.reduce(function(s,l){var q=sessionQuestions[l.qIdx];return s+pctFor(q,l.choice);},0)/total;
   var r=function(){return Math.random();};
   var dims=[
     {l:'Empathie',v:Math.min(99,Math.round(ar<0.4?68+r()*28:32+r()*42))},
@@ -1003,16 +1080,17 @@ function dlPDF(){
   var co=categories.find(function(c){return c.id===currentCat;});
   var cl=currentCat==='all'?'Toutes catégories':(co?co.emoji+' '+co.name:currentCat);
   var total=sessionLog.length;
-  var mn=sessionLog.filter(function(l){var q=sessionQuestions[l.qIdx];return q&&q.stats[l.choice]<50;}).length;
-  var ap=Math.round(sessionLog.reduce(function(s,l){var q=sessionQuestions[l.qIdx];return s+(q?q.stats[l.choice]:50);},0)/total);
+  var mn=sessionLog.filter(function(l){var q=sessionQuestions[l.qIdx];return isMinorityChoice(q,l.choice);}).length;
+  var ap=Math.round(sessionLog.reduce(function(s,l){var q=sessionQuestions[l.qIdx];return s+pctFor(q,l.choice);},0)/total);
   var tr=buildTraits(sessionLog,currentCat);
   var ds=new Date().toLocaleDateString('fr-FR',{day:'numeric',month:'long',year:'numeric'});
   var ch=sessionLog.map(function(item){
     var q=sessionQuestions[item.qIdx];
-    var letter=['A','B'][item.choice];
+    var letter=item.choice==='free'?'✍️':['A','B','C','D'][item.choice];
+    var pctDisplay=item.choice==='free'?'libre':pctFor(q,item.choice)+'%';
     return '<tr><td style="padding:8px 12px;font-size:11px;color:#8b89a0;border-bottom:1px solid #1e1e2a">'+q.text.slice(0,60)+'...</td>'
       +'<td style="padding:8px 12px;font-size:11px;font-weight:700;color:#c084fc;border-bottom:1px solid #1e1e2a;text-align:center">'+letter+'</td>'
-      +'<td style="padding:8px 12px;font-size:11px;font-weight:700;color:#eeeaf8;border-bottom:1px solid #1e1e2a;text-align:center">'+q.stats[item.choice]+'%</td></tr>';
+      +'<td style="padding:8px 12px;font-size:11px;font-weight:700;color:#eeeaf8;border-bottom:1px solid #1e1e2a;text-align:center">'+pctDisplay+'</td></tr>';
   }).join('');
   var rd=[
     {l:'Conformisme',v:Math.round(100-(mn/total)*100)},
