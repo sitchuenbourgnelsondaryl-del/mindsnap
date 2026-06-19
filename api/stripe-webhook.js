@@ -1,6 +1,7 @@
 const SUPABASE_URL = process.env.SUPABASE_URL;
 const SUPABASE_KEY = process.env.SUPABASE_SERVICE_KEY;
 const RESEND_KEY = process.env.RESEND_API_KEY;
+const ADMIN_EMAIL = 'sitchuenbourgnelsondaryl@gmail.com';
 
 async function sb(method, path, body) {
   const res = await fetch(`${SUPABASE_URL}/rest/v1/${path}`, {
@@ -46,6 +47,15 @@ function premiumEmailHtml(name, plan) {
   </div>`;
 }
 
+function adminPremiumHtml(name, email, plan) {
+  const planLabel = plan === 'yearly' ? 'Annuel ($39/an)' : 'Mensuel ($4.99/mois)';
+  return `
+  <div style="font-family:sans-serif;background:#060608;color:#eeeaf8;padding:32px;border-radius:16px;max-width:480px;margin:0 auto">
+    <h2 style="font-size:18px;color:#f59e0b">💰 Nouveau paiement Premium</h2>
+    <p style="color:#9994ad;line-height:1.6"><strong style="color:#eeeaf8">${name}</strong> (${email}) vient de s'abonner via Stripe — Plan : <strong style="color:#f59e0b">${planLabel}</strong></p>
+  </div>`;
+}
+
 export default async function handler(req, res) {
   if (req.method !== 'POST') return res.status(405).end();
 
@@ -72,6 +82,7 @@ export default async function handler(req, res) {
       const userData = await sb('GET', `users?id=eq.${userId}&select=email,name`);
       if (Array.isArray(userData) && userData.length > 0) {
         sendEmail(userData[0].email, '👑 Premium activé sur MindSnap', premiumEmailHtml(userData[0].name, plan));
+        sendEmail(ADMIN_EMAIL, '💰 Nouveau paiement Premium', adminPremiumHtml(userData[0].name, userData[0].email, plan));
       }
     }
   }
