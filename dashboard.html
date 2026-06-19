@@ -118,6 +118,7 @@ body::before{content:'';position:fixed;top:-200px;left:50%;transform:translateX(
       <div class="user-name" id="user-name">...</div>
       <div class="user-email" id="user-email"></div>
       <div class="user-badges">
+        <span class="badge" id="admin-badge" style="display:none;background:rgba(244,63,94,0.1);border-color:rgba(244,63,94,0.3);color:#f43f5e">🛡️ Admin</span>
         <span class="badge free" id="plan-badge">✦ Gratuit</span>
         <span class="badge" id="member-badge">📅 Membre</span>
       </div>
@@ -320,6 +321,11 @@ async function loadDashboard() {
   document.getElementById('user-name').textContent = session.name || 'Utilisateur';
   document.getElementById('user-email').textContent = session.email || '';
   document.getElementById('edit-name').value = session.name || '';
+
+  // Admin badge
+  if (session.isAdmin) {
+    document.getElementById('admin-badge').style.display = 'inline-flex';
+  }
 
   // Premium UI
   if (isPremium) {
