@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+!DOCTYPE html>
 <html lang="fr">
 <head>
 <meta charset="UTF-8">
@@ -576,8 +576,6 @@ let currentQIdx = 0;
 let picked = null;
 let freeTextAnswer = '';
 let lastAnalysisText = '';
-let voiceAudio = null;
-let voiceNoteLoading = false;
 let totalAnswered = parseInt(localStorage.getItem('totalAnswered') || '0');
 let sessionLog = [];
 
@@ -943,7 +941,13 @@ Règles : utilise "tu", sois direct mais bienveillant, ne diagnostique JAMAIS de
   btn.disabled = false;
 }
 
-// ── VOICE NOTE ──
+// ── VOICE NOTE (Web Speech API — gratuit, intégré au navigateur) ──
+let speechUtterance = null;
+let speechWordsTotal = 0;
+let speechProgressInterval = null;
+let speechStartTime = 0;
+let speechEstDuration = 0;
+
 function buildWaveBars(n) {
   let html = '';
   for (let i = 0; i < n; i++) {
@@ -954,7 +958,9 @@ function buildWaveBars(n) {
 }
 
 function resetVoiceNote() {
-  if (voiceAudio) { voiceAudio.pause(); voiceAudio = null; }
+  if (window.speechSynthesis) window.speechSynthesis.cancel();
+  if (speechProgressInterval) { clearInterval(speechProgressInterval); speechProgressInterval = null; }
+  speechUtterance = null;
   document.getElementById('voice-note-wrap').style.display = 'none';
   document.getElementById('vn-generate-btn').style.display = 'none';
   document.getElementById('vn-generate-btn').disabled = false;
@@ -963,77 +969,96 @@ function resetVoiceNote() {
   document.getElementById('vn-time').textContent = '--:--';
 }
 
-async function generateVoiceNote() {
-  if (!lastAnalysisText || voiceNoteLoading) return;
-  voiceNoteLoading = true;
-  const genBtn = document.getElementById('vn-generate-btn');
-  genBtn.disabled = true;
-  genBtn.textContent = '🎙️ Génération de la voix…';
+function pickFrenchVoice() {
+  const voices = window.speechSynthesis.getVoices();
+  return voices.find(v => v.lang === 'fr-FR' && /Google|Microsoft|Amélie|Thomas/i.test(v.name))
+    || voices.find(v => v.lang === 'fr-FR')
+    || voices.find(v => v.lang && v.lang.startsWith('fr'))
+    || null;
+}
 
-  try {
-    const res = await fetch('/api/tts', {
-      method: 'POST',
-      headers: {'Content-Type': 'application/json'},
-      body: JSON.stringify({ text: lastAnalysisText })
-    });
-    if (!res.ok) throw new Error('TTS failed');
-    const blob = await res.blob();
-    const url = URL.createObjectURL(blob);
-    voiceAudio = new Audio(url);
-
-    document.getElementById('vn-wave').innerHTML = buildWaveBars(22);
-    genBtn.style.display = 'none';
-    document.getElementById('voice-note-wrap').style.display = 'block';
-
-    voiceAudio.addEventListener('loadedmetadata', () => {
-      updateVoiceTime();
-    });
-    voiceAudio.addEventListener('timeupdate', () => {
-      updateVoiceTime();
-      updateWaveProgress();
-    });
-    voiceAudio.addEventListener('ended', () => {
-      document.getElementById('vn-play-icon').textContent = '▶';
-    });
-  } catch(err) {
-    genBtn.disabled = false;
-    genBtn.textContent = '🎙️ Réessayer la note vocale';
-    toast('Note vocale indisponible. Réessaie.');
+function generateVoiceNote() {
+  if (!lastAnalysisText) return;
+  if (!('speechSynthesis' in window)) {
+    toast('Note vocale non supportée sur ce navigateur.');
+    return;
   }
-  voiceNoteLoading = false;
-}
 
-function updateVoiceTime() {
-  if (!voiceAudio) return;
-  const cur = voiceAudio.currentTime || 0;
-  const dur = voiceAudio.duration || 0;
-  const fmt = (s) => {
-    if (!isFinite(s)) return '--:--';
-    const m = Math.floor(s / 60);
-    const sec = Math.floor(s % 60);
-    return m + ':' + (sec < 10 ? '0' : '') + sec;
+  const genBtn = document.getElementById('vn-generate-btn');
+  genBtn.style.display = 'none';
+
+  document.getElementById('vn-wave').innerHTML = buildWaveBars(22);
+  document.getElementById('voice-note-wrap').style.display = 'block';
+
+  speechWordsTotal = lastAnalysisText.split(/\s+/).filter(Boolean).length;
+  speechEstDuration = Math.max(8, speechWordsTotal / 2.7); // ~2.7 mots/seconde en lecture naturelle
+
+  speechUtterance = new SpeechSynthesisUtterance(lastAnalysisText);
+  const frVoice = pickFrenchVoice();
+  if (frVoice) speechUtterance.voice = frVoice;
+  speechUtterance.lang = 'fr-FR';
+  speechUtterance.rate = 0.98;
+  speechUtterance.pitch = 1.0;
+
+  speechUtterance.onstart = () => {
+    speechStartTime = Date.now();
+    document.getElementById('vn-play-icon').textContent = '⏸';
+    if (speechProgressInterval) clearInterval(speechProgressInterval);
+    speechProgressInterval = setInterval(updateSpeechProgress, 150);
   };
-  const remaining = dur ? dur - cur : 0;
-  document.getElementById('vn-time').textContent = voiceAudio.paused && cur === 0 ? fmt(dur) : fmt(remaining);
+  speechUtterance.onend = () => {
+    document.getElementById('vn-play-icon').textContent = '▶';
+    if (speechProgressInterval) { clearInterval(speechProgressInterval); speechProgressInterval = null; }
+    document.getElementById('vn-time').textContent = formatTime(speechEstDuration);
+    document.querySelectorAll('#vn-wave .vn-bar').forEach(b => b.classList.add('played'));
+  };
+  speechUtterance.onerror = () => {
+    if (speechProgressInterval) { clearInterval(speechProgressInterval); speechProgressInterval = null; }
+    toast('Lecture interrompue.');
+  };
+
+  window.speechSynthesis.cancel();
+  window.speechSynthesis.speak(speechUtterance);
 }
 
-function updateWaveProgress() {
-  if (!voiceAudio || !voiceAudio.duration) return;
-  const pct = voiceAudio.currentTime / voiceAudio.duration;
+function formatTime(s) {
+  if (!isFinite(s)) return '--:--';
+  const m = Math.floor(s / 60);
+  const sec = Math.floor(s % 60);
+  return m + ':' + (sec < 10 ? '0' : '') + sec;
+}
+
+function updateSpeechProgress() {
+  const elapsed = (Date.now() - speechStartTime) / 1000;
+  const remaining = Math.max(0, speechEstDuration - elapsed);
+  document.getElementById('vn-time').textContent = formatTime(remaining);
+  const pct = Math.min(1, elapsed / speechEstDuration);
   const bars = document.querySelectorAll('#vn-wave .vn-bar');
   const playedCount = Math.floor(pct * bars.length);
   bars.forEach((b, i) => b.classList.toggle('played', i < playedCount));
 }
 
 function toggleVoiceNote() {
-  if (!voiceAudio) return;
-  if (voiceAudio.paused) {
-    voiceAudio.play();
-    document.getElementById('vn-play-icon').textContent = '⏸';
-  } else {
-    voiceAudio.pause();
+  if (!window.speechSynthesis) return;
+  if (window.speechSynthesis.speaking && !window.speechSynthesis.paused) {
+    window.speechSynthesis.pause();
     document.getElementById('vn-play-icon').textContent = '▶';
+    if (speechProgressInterval) { clearInterval(speechProgressInterval); speechProgressInterval = null; }
+  } else if (window.speechSynthesis.paused) {
+    window.speechSynthesis.resume();
+    document.getElementById('vn-play-icon').textContent = '⏸';
+    speechStartTime = Date.now() - ((speechEstDuration - parseTimeToSeconds(document.getElementById('vn-time').textContent)) * 1000);
+    if (speechProgressInterval) clearInterval(speechProgressInterval);
+    speechProgressInterval = setInterval(updateSpeechProgress, 150);
+  } else {
+    generateVoiceNote();
   }
+}
+
+function parseTimeToSeconds(str) {
+  const parts = str.split(':');
+  if (parts.length !== 2) return 0;
+  return (parseInt(parts[0], 10) || 0) * 60 + (parseInt(parts[1], 10) || 0);
 }
 
 function shareProfile() {
@@ -1275,6 +1300,10 @@ function dlPDF(){
 }
 
 buildHome();
+if ('speechSynthesis' in window) {
+  window.speechSynthesis.getVoices();
+  window.speechSynthesis.onvoiceschanged = function() { window.speechSynthesis.getVoices(); };
+}
 updatePremUI();
 
 // Update top bar if logged in
