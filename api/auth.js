@@ -1,6 +1,7 @@
 const SUPABASE_URL = process.env.SUPABASE_URL;
 const SUPABASE_KEY = process.env.SUPABASE_SERVICE_KEY;
 const RESEND_KEY = process.env.RESEND_API_KEY;
+const ADMIN_EMAIL = 'sitchuenbourgnelsondaryl@gmail.com';
 
 async function sb(method, path, body) {
   const res = await fetch(`${SUPABASE_URL}/rest/v1/${path}`, {
@@ -18,7 +19,7 @@ async function sb(method, path, body) {
 }
 
 async function sendEmail(to, subject, html) {
-  if (!RESEND_KEY) return; // skip silently if not configured
+  if (!RESEND_KEY) return;
   try {
     await fetch('https://api.resend.com/emails', {
       method: 'POST',
@@ -33,7 +34,7 @@ async function sendEmail(to, subject, html) {
         html,
       }),
     });
-  } catch(e) { /* don't break the flow if email fails */ }
+  } catch(e) {}
 }
 
 function welcomeEmailHtml(name) {
@@ -52,6 +53,23 @@ function premiumEmailHtml(name, plan) {
     <h1 style="font-size:24px;color:#f59e0b">👑 Premium activé !</h1>
     <p style="color:#9994ad;line-height:1.6">Merci ${name} ! Ton abonnement ${planLabel} est confirmé. Tu as maintenant accès à l'analyse profonde, au radar 8 dimensions, à la compatibilité relationnelle et au rapport PDF.</p>
     <a href="https://mindsnap-delta.vercel.app/dashboard.html" style="display:inline-block;background:linear-gradient(135deg,#f59e0b,#f97316);color:#0a0a0a;font-weight:700;padding:12px 24px;border-radius:10px;text-decoration:none;margin-top:16px">Voir mon profil</a>
+  </div>`;
+}
+
+function adminNewUserHtml(name, email) {
+  return `
+  <div style="font-family:sans-serif;background:#060608;color:#eeeaf8;padding:32px;border-radius:16px;max-width:480px;margin:0 auto">
+    <h2 style="font-size:18px;color:#06b6d4">🆕 Nouvelle inscription</h2>
+    <p style="color:#9994ad;line-height:1.6"><strong style="color:#eeeaf8">${name}</strong> (${email}) vient de créer un compte sur MindSnap.</p>
+  </div>`;
+}
+
+function adminPremiumHtml(name, email, plan) {
+  const planLabel = plan === 'yearly' ? 'Annuel ($39/an)' : 'Mensuel ($4.99/mois)';
+  return `
+  <div style="font-family:sans-serif;background:#060608;color:#eeeaf8;padding:32px;border-radius:16px;max-width:480px;margin:0 auto">
+    <h2 style="font-size:18px;color:#f59e0b">💰 Nouveau paiement Premium</h2>
+    <p style="color:#9994ad;line-height:1.6"><strong style="color:#eeeaf8">${name}</strong> (${email}) vient de s'abonner — Plan : <strong style="color:#f59e0b">${planLabel}</strong></p>
   </div>`;
 }
 
@@ -82,10 +100,13 @@ export default async function handler(req, res) {
     const existing = await sb('GET', `users?email=eq.${encodeURIComponent(email.toLowerCase().trim())}&select=id`);
     if (Array.isArray(existing) && existing.length > 0) return res.status(400).json({ error: 'Email déjà utilisé.' });
 
+    const isAdmin = email.toLowerCase().trim() === ADMIN_EMAIL.toLowerCase();
+
     const data = await sb('POST', 'users', {
       email: email.toLowerCase().trim(),
       name: name.trim(),
       password_hash: hashPass(password),
+      is_admin: isAdmin,
     });
 
     if (!data) return res.status(500).json({ error: 'Erreur création compte.' });
@@ -93,8 +114,11 @@ export default async function handler(req, res) {
     if (!user || !user.id) return res.status(500).json({ error: 'Erreur création compte.' });
 
     sendEmail(user.email, 'Bienvenue sur MindSnap 🎯', welcomeEmailHtml(user.name));
+    if (!isAdmin) {
+      sendEmail(ADMIN_EMAIL, '🆕 Nouvelle inscription MindSnap', adminNewUserHtml(user.name, user.email));
+    }
 
-    return res.status(200).json({ success: true, user: { id: user.id, email: user.email, name: user.name, premium: user.premium || false } });
+    return res.status(200).json({ success: true, user: { id: user.id, email: user.email, name: user.name, premium: user.premium || false, isAdmin } });
   }
 
   // ── LOGIN ──
@@ -110,7 +134,9 @@ export default async function handler(req, res) {
 
     if (user.password_hash !== hashPass(password)) return res.status(400).json({ error: 'Mot de passe incorrect.' });
 
-    return res.status(200).json({ success: true, user: { id: user.id, email: user.email, name: user.name, premium: user.premium || false, plan: user.premium_plan || null } });
+    const isAdmin = user.email.toLowerCase() === ADMIN_EMAIL.toLowerCase();
+
+    return res.status(200).json({ success: true, user: { id: user.id, email: user.email, name: user.name, premium: user.premium || false, plan: user.premium_plan || null, isAdmin } });
   }
 
   // ── GET USER ──
@@ -119,7 +145,8 @@ export default async function handler(req, res) {
     const data = await sb('GET', `users?id=eq.${id}&select=*`);
     if (!Array.isArray(data) || data.length === 0) return res.status(404).json({ error: 'Utilisateur introuvable.' });
     const user = data[0];
-    return res.status(200).json({ user: { id: user.id, email: user.email, name: user.name, premium: user.premium || false, plan: user.premium_plan, total_answered: user.total_answered || 0, total_sessions: user.total_sessions || 0 } });
+    const isAdmin = user.email.toLowerCase() === ADMIN_EMAIL.toLowerCase();
+    return res.status(200).json({ user: { id: user.id, email: user.email, name: user.name, premium: user.premium || false, plan: user.premium_plan, total_answered: user.total_answered || 0, total_sessions: user.total_sessions || 0, isAdmin } });
   }
 
   // ── UPDATE NAME ──
@@ -145,6 +172,7 @@ export default async function handler(req, res) {
     const userData = await sb('GET', `users?id=eq.${userId}&select=email,name`);
     if (Array.isArray(userData) && userData.length > 0) {
       sendEmail(userData[0].email, '👑 Premium activé sur MindSnap', premiumEmailHtml(userData[0].name, plan));
+      sendEmail(ADMIN_EMAIL, '💰 Nouveau paiement Premium', adminPremiumHtml(userData[0].name, userData[0].email, plan));
     }
 
     return res.status(200).json({ success: true });
