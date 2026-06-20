@@ -645,7 +645,8 @@ function pickFree() {
   picked = 'free';
   totalAnswered++;
   saveAnswered();
-  document.getElementById('streak-count').textContent = totalAnswered;
+  var streakEl2 = document.getElementById('streak-count');
+  if (streakEl2) streakEl2.textContent = totalAnswered;
   sessionLog.push({qIdx: currentQIdx, choice: 'free', freeText: val});
   document.querySelectorAll('.choice-btn').forEach(b => b.classList.add('dimmed'));
   document.getElementById('free-answer-input').disabled = true;
@@ -659,7 +660,8 @@ function pick(idx) {
   picked = idx;
   totalAnswered++;
   saveAnswered();
-  document.getElementById('streak-count').textContent = totalAnswered;
+  var streakEl = document.getElementById('streak-count');
+  if (streakEl) streakEl.textContent = totalAnswered;
   sessionLog.push({qIdx: currentQIdx, choice: idx});
   const colorClasses = ['sel-a','sel-b','sel-c','sel-d'];
   document.querySelectorAll('.choice-btn').forEach((b, i) => {
@@ -960,7 +962,7 @@ function updatePremUI(){
   if(!isPremium) return;
   var p=document.getElementById('sp'), d=document.getElementById('sd');
   if(d) d.classList.add('gold');
-  if(p){ p.classList.add('prem-active'); p.innerHTML='<span class="streak-dot gold"></span>👑 Premium'; p.onclick=function(){toast('Premium actif !');}; }
+  if(p){ p.classList.add('prem-active'); p.innerHTML='<span class="streak-dot gold" id="sd"></span>👑 Premium <span id="streak-count" style="display:none">0</span>'; p.onclick=function(){toast('Premium actif !');}; }
 }
 function showPremiumPage(){
   var prev=document.querySelector('.screen.active');
@@ -1184,3 +1186,4 @@ updatePremUI();
 </script>
 </body>
 </html>
+
