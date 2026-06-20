@@ -195,6 +195,18 @@ body::before{content:'';position:fixed;top:-200px;left:50%;transform:translateX(
 .ai-content p{margin-bottom:0.9rem}
 .ai-content p:last-child{margin-bottom:0}
 .ai-content strong{color:var(--neon);font-weight:700}
+
+.vn-generate-btn{width:100%;margin-top:1rem;text-align:center}
+.voice-note-wrap{margin-top:1rem}
+.voice-note-player{background:linear-gradient(135deg,rgba(124,58,237,0.12),rgba(6,182,212,0.08));border:1px solid rgba(192,132,252,0.25);border-radius:16px;padding:12px 16px;display:flex;align-items:center;gap:12px}
+.vn-play-btn{width:40px;height:40px;border-radius:50%;background:linear-gradient(135deg,var(--accent),var(--neon));border:none;cursor:pointer;flex-shrink:0;box-shadow:0 0 16px rgba(192,132,252,0.5);display:flex;align-items:center;justify-content:center;color:white;font-size:0.9rem;transition:transform 0.15s}
+.vn-play-btn:active{transform:scale(0.92)}
+.vn-wave{flex:1;display:flex;align-items:center;gap:2.5px;height:28px;overflow:hidden}
+.vn-bar{width:2.5px;border-radius:2px;background:rgba(192,132,252,0.3);transition:background 0.15s}
+.vn-bar.played{background:var(--neon)}
+.vn-time{font-size:0.7rem;color:var(--muted2);flex-shrink:0;font-weight:600;min-width:36px;text-align:right}
+.vn-caption{display:flex;align-items:center;gap:6px;margin-top:0.6rem;font-size:0.7rem;color:var(--muted2);font-style:italic}
+.vn-generate-btn:disabled{opacity:0.5;cursor:not-allowed}
 .ai-quote{margin:0.75rem 0;padding:0.9rem 1.1rem;background:rgba(124,58,237,0.07);border-left:2px solid var(--accent);border-radius:0 10px 10px 0;font-size:0.85rem;color:var(--muted2);font-style:italic;line-height:1.7}
 
 .traits-section{margin-bottom:1.5rem}
@@ -379,6 +391,17 @@ body::before{content:'';position:fixed;top:-200px;left:50%;transform:translateX(
       <div class="ai-loading-text" id="ai-loading-text">Analyse en cours…</div>
     </div>
     <div class="ai-content" id="ai-content"></div>
+    <div class="voice-note-wrap" id="voice-note-wrap" style="display:none">
+      <div class="voice-note-player" id="voice-note-player">
+        <button class="vn-play-btn" id="vn-play-btn" onclick="toggleVoiceNote()">
+          <span id="vn-play-icon">▶</span>
+        </button>
+        <div class="vn-wave" id="vn-wave"></div>
+        <span class="vn-time" id="vn-time">--:--</span>
+      </div>
+      <div class="vn-caption">✨ Écoute ton profil, comme un message vocal</div>
+    </div>
+    <button class="btn-regen vn-generate-btn" id="vn-generate-btn" onclick="generateVoiceNote()" style="display:none">🎙️ Écouter en note vocale</button>
   </div>
 
   <div class="traits-section">
@@ -552,6 +575,9 @@ let sessionQuestions = [];
 let currentQIdx = 0;
 let picked = null;
 let freeTextAnswer = '';
+let lastAnalysisText = '';
+let voiceAudio = null;
+let voiceNoteLoading = false;
 let totalAnswered = parseInt(localStorage.getItem('totalAnswered') || '0');
 let sessionLog = [];
 
@@ -829,6 +855,7 @@ function showProfile() {
   // reset analysis
   document.getElementById('ai-content').classList.remove('on');
   document.getElementById('ai-content').innerHTML = '';
+  resetVoiceNote();
 
   showScreen('screen-profile');
   if(isPremium) unlockAll();
@@ -904,6 +931,9 @@ Règles : utilise "tu", sois direct mais bienveillant, ne diagnostique JAMAIS de
         : `<p>${p.trim()}</p>`
     ).join('');
     contentEl.classList.add('on');
+    lastAnalysisText = paras.join(' ');
+    resetVoiceNote();
+    if (isPremium) document.getElementById('vn-generate-btn').style.display = 'block';
   } catch(err) {
     clearInterval(loadingInterval);
     loadingEl.classList.remove('on');
@@ -911,6 +941,99 @@ Règles : utilise "tu", sois direct mais bienveillant, ne diagnostique JAMAIS de
     contentEl.classList.add('on');
   }
   btn.disabled = false;
+}
+
+// ── VOICE NOTE ──
+function buildWaveBars(n) {
+  let html = '';
+  for (let i = 0; i < n; i++) {
+    const h = 6 + Math.round(Math.random() * 18);
+    html += `<div class="vn-bar" style="height:${h}px"></div>`;
+  }
+  return html;
+}
+
+function resetVoiceNote() {
+  if (voiceAudio) { voiceAudio.pause(); voiceAudio = null; }
+  document.getElementById('voice-note-wrap').style.display = 'none';
+  document.getElementById('vn-generate-btn').style.display = 'none';
+  document.getElementById('vn-generate-btn').disabled = false;
+  document.getElementById('vn-generate-btn').textContent = '🎙️ Écouter en note vocale';
+  document.getElementById('vn-play-icon').textContent = '▶';
+  document.getElementById('vn-time').textContent = '--:--';
+}
+
+async function generateVoiceNote() {
+  if (!lastAnalysisText || voiceNoteLoading) return;
+  voiceNoteLoading = true;
+  const genBtn = document.getElementById('vn-generate-btn');
+  genBtn.disabled = true;
+  genBtn.textContent = '🎙️ Génération de la voix…';
+
+  try {
+    const res = await fetch('/api/tts', {
+      method: 'POST',
+      headers: {'Content-Type': 'application/json'},
+      body: JSON.stringify({ text: lastAnalysisText })
+    });
+    if (!res.ok) throw new Error('TTS failed');
+    const blob = await res.blob();
+    const url = URL.createObjectURL(blob);
+    voiceAudio = new Audio(url);
+
+    document.getElementById('vn-wave').innerHTML = buildWaveBars(22);
+    genBtn.style.display = 'none';
+    document.getElementById('voice-note-wrap').style.display = 'block';
+
+    voiceAudio.addEventListener('loadedmetadata', () => {
+      updateVoiceTime();
+    });
+    voiceAudio.addEventListener('timeupdate', () => {
+      updateVoiceTime();
+      updateWaveProgress();
+    });
+    voiceAudio.addEventListener('ended', () => {
+      document.getElementById('vn-play-icon').textContent = '▶';
+    });
+  } catch(err) {
+    genBtn.disabled = false;
+    genBtn.textContent = '🎙️ Réessayer la note vocale';
+    toast('Note vocale indisponible. Réessaie.');
+  }
+  voiceNoteLoading = false;
+}
+
+function updateVoiceTime() {
+  if (!voiceAudio) return;
+  const cur = voiceAudio.currentTime || 0;
+  const dur = voiceAudio.duration || 0;
+  const fmt = (s) => {
+    if (!isFinite(s)) return '--:--';
+    const m = Math.floor(s / 60);
+    const sec = Math.floor(s % 60);
+    return m + ':' + (sec < 10 ? '0' : '') + sec;
+  };
+  const remaining = dur ? dur - cur : 0;
+  document.getElementById('vn-time').textContent = voiceAudio.paused && cur === 0 ? fmt(dur) : fmt(remaining);
+}
+
+function updateWaveProgress() {
+  if (!voiceAudio || !voiceAudio.duration) return;
+  const pct = voiceAudio.currentTime / voiceAudio.duration;
+  const bars = document.querySelectorAll('#vn-wave .vn-bar');
+  const playedCount = Math.floor(pct * bars.length);
+  bars.forEach((b, i) => b.classList.toggle('played', i < playedCount));
+}
+
+function toggleVoiceNote() {
+  if (!voiceAudio) return;
+  if (voiceAudio.paused) {
+    voiceAudio.play();
+    document.getElementById('vn-play-icon').textContent = '⏸';
+  } else {
+    voiceAudio.pause();
+    document.getElementById('vn-play-icon').textContent = '▶';
+  }
 }
 
 function shareProfile() {
@@ -1186,4 +1309,5 @@ updatePremUI();
 </script>
 </body>
 </html>
+
 
