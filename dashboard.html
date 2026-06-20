@@ -325,6 +325,16 @@ async function loadDashboard() {
   // Admin badge
   if (session.isAdmin) {
     document.getElementById('admin-badge').style.display = 'inline-flex';
+    var topActions = document.querySelector('.top-actions');
+    if (topActions && !document.getElementById('admin-panel-link')) {
+      var adminLink = document.createElement('a');
+      adminLink.id = 'admin-panel-link';
+      adminLink.href = '/admin.html';
+      adminLink.className = 'btn-sm';
+      adminLink.style.cssText = 'color:#f43f5e;border-color:rgba(244,63,94,0.25)';
+      adminLink.textContent = '🛡️ Admin';
+      topActions.insertBefore(adminLink, topActions.firstChild);
+    }
   }
 
   // Premium UI
